@@ -1,6 +1,15 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router"
-import { Typography, Button, Space, Card, Avatar, Row, Tag, Col } from "antd"
+import {
+  Typography,
+  Button,
+  Space,
+  Card,
+  Row,
+  Tag,
+  Col,
+  Popconfirm
+} from "antd"
 import {
   PlusOutlined,
   PhoneOutlined,
@@ -8,8 +17,13 @@ import {
   DeleteOutlined
 } from "@ant-design/icons"
 import { toCreateAppointment } from "./routes"
+import { openNotification } from "../Notification"
 import { Bubble } from "../components/Bubble"
-import { loadAppointmentsFx, useAppointmentsStore } from "./store"
+import {
+  deleteAppointment,
+  loadAppointmentsFx,
+  useAppointmentsStore
+} from "./store"
 import { statusColorMapping } from "./Model"
 import "moment/locale/es-mx"
 
@@ -50,22 +64,42 @@ export const Appointments = () => {
                 boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px"
               }}
               actions={[
-                <Space
-                  style={{ fontSize: "1.5em", color: "black" }}
-                  size="middle"
-                  direction="horizontal"
+                <Popconfirm
+                  placement="top"
+                  title={"Está seguro que desea borrar este turno?"}
+                  onConfirm={() => {
+                    deleteAppointment(app.id)
+                  }}
+                  okText="Si"
+                  cancelText="No"
                 >
-                  Borrar
-                  <DeleteOutlined key="delete" />
-                </Space>,
-                <Space
-                  style={{ fontSize: "1.5em", color: "red" }}
-                  size="middle"
-                  direction="horizontal"
+                  <Space
+                    style={{ fontSize: "1.5em", color: "black" }}
+                    size="middle"
+                    direction="horizontal"
+                  >
+                    Borrar
+                    <DeleteOutlined key="delete" />
+                  </Space>
+                </Popconfirm>,
+                <Popconfirm
+                  placement="top"
+                  title={"Está seguro que desea finalizar esta llamada?"}
+                  onConfirm={() => {
+                    openNotification("bottomRight", "Llamada finalizada (WIP)")
+                  }}
+                  okText="Si"
+                  cancelText="No"
                 >
-                  Finalizar llamada
-                  <ApiOutlined key="end" />
-                </Space>,
+                  <Space
+                    style={{ fontSize: "1.5em", color: "red" }}
+                    size="middle"
+                    direction="horizontal"
+                  >
+                    Finalizar llamada
+                    <ApiOutlined key="end" />
+                  </Space>
+                </Popconfirm>,
                 <Space
                   style={{ fontSize: "1.5em", color: "green" }}
                   size="middle"
