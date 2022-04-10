@@ -64,6 +64,8 @@ export const loadAppointmentsFx = appointmentsDomain.effect(() =>
   loadAppointments()
 )
 
+export const deleteAppointment = appointmentsDomain.event<string>()
+
 type State = {
   appointments: Appointment[]
 }
@@ -76,6 +78,13 @@ export const $appointments = appointmentsDomain
   .store(initialState)
   .on(loadAppointmentsFx.done, (state, payload) => {
     return { ...state, appointments: payload.result }
+  })
+  .on(deleteAppointment, (state, payload) => {
+    console.log(payload)
+
+    const newApps = state.appointments.filter(({ id }) => id !== payload)
+
+    return { ...state, appointments: newApps }
   })
 
 export const useAppointmentsStore = () => useStore($appointments)
