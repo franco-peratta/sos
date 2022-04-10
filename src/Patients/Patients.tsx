@@ -1,6 +1,6 @@
-import { EditOutlined } from "@ant-design/icons"
-import { Input, Space, Table, Typography } from "antd"
 import { useCallback, useState } from "react"
+import { Button, Input, Space, Table, Typography } from "antd"
+import { EditOutlined, PlusOutlined } from "@ant-design/icons"
 import { Bubble } from "../components/Bubble"
 import { Patient } from "./model"
 
@@ -123,7 +123,16 @@ export const Patients = () => {
   return (
     <Bubble>
       <Space size="large" direction="vertical" style={{ width: "100%" }}>
-        <Title>Pacientes</Title>
+        <div className="flex--space-between">
+          <Title>Pacientes</Title>
+          <Button onClick={() => {}} type="default" size="large">
+            <Space direction="horizontal">
+              <PlusOutlined />
+              Crear paciente
+            </Space>
+          </Button>
+        </div>
+
         <Search
           size="large"
           placeholder="Buscar"
