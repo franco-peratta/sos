@@ -11,52 +11,45 @@ const { Title } = Typography
 
 const dataSource = [
   {
-    key: "1",
     id: "1",
     name: "Mike",
-    dni: "38919769",
+    dni: "1",
     email: "fperatta@teladoc.com"
   },
   {
-    key: "2",
     id: "2",
     name: "Homer",
-    dni: "38919769",
+    dni: "2",
     email: "homer@gmail.com"
   },
   {
-    key: "3",
     id: "3",
     name: "Paco",
-    dni: "38919769",
+    dni: "3",
     email: "paco@gmail.com"
   },
   {
-    key: "4",
     id: "4",
     name: "Joel",
-    dni: "38919769",
+    dni: "4",
     email: "joel@gmail.com"
   },
   {
-    key: "5",
     id: "5",
     name: "Mendi",
-    dni: "38919769",
+    dni: "5",
     email: "mendi@gmail.com"
   },
   {
-    key: "6",
     id: "6",
     name: "Claxton",
-    dni: "38919769",
+    dni: "6",
     email: "claxton@gmail.com"
   },
   {
-    key: "7",
     id: "7",
     name: "Andy",
-    dni: "38919769",
+    dni: "7",
     email: "andy@gmail.com"
   }
 ]
