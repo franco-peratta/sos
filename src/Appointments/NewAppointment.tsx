@@ -37,18 +37,18 @@ export const NewAppointment = () => {
   const next = useCallback(() => {
     if (current === 0) {
       const patient = validateInitialStep(idForm.getFieldValue("id"))
-      // @TODO do soth with this patient. check if it exits or not
+      // @TODO do something with this patient. check if it exits or not
       console.log(patient)
       idForm
         .validateFields()
         .then(() => setCurrent(current + 1))
-        .catch()
+        .catch(() => {})
     }
     if (current === 1) {
       detailsForm
         .validateFields()
         .then(() => setCurrent(current + 1))
-        .catch()
+        .catch(() => {})
     }
   }, [idForm, detailsForm, current])
 
@@ -68,6 +68,7 @@ export const NewAppointment = () => {
 
   const onMedicChange = (value: string) => {
     detailsForm.setFieldsValue({ medic: value })
+    detailsForm.setFieldsValue({ date: moment() })
   }
 
   return (
@@ -109,7 +110,6 @@ export const NewAppointment = () => {
               />
             </Form.Item>
           </Form>
-
           <Form
             form={detailsForm}
             layout="vertical"
@@ -283,7 +283,7 @@ export const NewAppointment = () => {
 
 const roundTimeToNextFiveSlot = (time: Moment) => {
   const remainder = 5 - (time.minute() % 5)
-  if (remainder === 0) return time
+  if (remainder === 0 || remainder === 5) return time
 
   const dateTime = moment(time).add(remainder, "minutes")
 

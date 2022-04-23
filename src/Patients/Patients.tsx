@@ -1,13 +1,15 @@
-import { useCallback, useState } from "react"
+import { ReactNode, useCallback, useEffect, useState } from "react"
 import { Button, Input, Space, Table, Typography } from "antd"
 import { EditOutlined, PlusOutlined } from "@ant-design/icons"
 import { Bubble } from "../components/Bubble"
 import { Patient } from "./model"
+import { useNavigate } from "react-router-dom"
+import { toPatients } from "./routes"
 
 // See EditableTable in https://ant.design/components/table/
 
 const { Search } = Input
-const { Title } = Typography
+const { Title, Link } = Typography
 
 const dataSource = [
   {
@@ -56,26 +58,36 @@ const dataSource = [
 
 const tableColumns = [
   {
+    key: "id",
     title: "ID",
-    dataIndex: "id",
-    key: "id"
+    dataIndex: "id"
   },
   {
     title: "Name",
     dataIndex: "name",
-    key: "name"
+    key: "name",
+    render: (_: any, record: Patient) => (
+      <Link
+        onClick={() => {
+          console.log(record)
+        }}
+      >
+        {record.name}
+      </Link>
+    )
   },
   {
+    key: "dni",
     title: "DNI",
-    dataIndex: "dni",
-    key: "dni"
+    dataIndex: "dni"
   },
   {
+    key: "email",
     title: "email",
-    dataIndex: "email",
-    key: "email"
+    dataIndex: "email"
   },
   {
+    key: "edit",
     title: "",
     dataIndex: "edit",
     render: (_: any, record: Patient) => {
@@ -97,7 +109,68 @@ const tableColumns = [
 export const Patients = () => {
   const [data] = useState(dataSource)
   const [filteredData, setFilteredData] = useState(dataSource)
-  const [columns] = useState(tableColumns)
+  const [columns, setColumns] = useState<
+    {
+      key: string
+      title: string
+      dataIndex: string
+      render?: (...args: any) => ReactNode
+    }[]
+  >()
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    setColumns([
+      {
+        key: "id",
+        title: "ID",
+        dataIndex: "id"
+      },
+      {
+        title: "Name",
+        dataIndex: "name",
+        key: "name",
+        render: (_: any, record: Patient) => (
+          <Link
+            onClick={() => {
+              navigate(`${toPatients()}/${record.id}`)
+            }}
+          >
+            {record.name}
+          </Link>
+        )
+      },
+      {
+        key: "dni",
+        title: "DNI",
+        dataIndex: "dni"
+      },
+      {
+        key: "email",
+        title: "email",
+        dataIndex: "email"
+      },
+      {
+        key: "edit",
+        title: "",
+        dataIndex: "edit",
+        render: (_: any, record: Patient) => {
+          return (
+            <div className="icon--hovered">
+              <EditOutlined
+                style={{ fontSize: "1.5em" }}
+                onClick={() => {
+                  console.log(record)
+                  alert("te lleva a la pantalla de editar pacientes (WIP)")
+                }}
+              />
+            </div>
+          )
+        }
+      }
+    ])
+  }, [])
 
   const onSearch = useCallback(
     (value: string) => {
@@ -132,7 +205,8 @@ export const Patients = () => {
           allowClear
           onSearch={onSearch}
         />
-        <Table dataSource={filteredData} columns={columns} />
+
+        <Table key="table" dataSource={filteredData} columns={columns} />
       </Space>
     </Bubble>
   )
