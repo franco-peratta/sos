@@ -2,7 +2,7 @@ import { Typography, Collapse, Button, Space, Modal } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
 import { EmrType } from "./model"
 import { useState } from "react"
-import { EmrSettingsModal } from "./EmrSettings"
+import { EmrSettingsModal } from "./EmrSettingsModal"
 
 const { Text } = Typography
 const { Panel } = Collapse

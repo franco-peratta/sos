@@ -72,30 +72,30 @@ const patients: Patient[] = [
 export const PatientDetails = () => {
   const { id } = useParams()
 
-  const [details, setDetails] = useState<Patient>()
+  const [patient, setPatient] = useState<Patient>()
 
   useEffect(() => {
-    setDetails(patients.find((patient) => patient.id === id))
+    setPatient(patients.find((patient) => patient.id === id))
   }, [id])
 
-  if (!details) return <Loader />
+  if (!patient) return <Loader />
 
   const text = "some text"
 
   return (
     <Bubble>
-      <Title>{details.name}</Title>
+      <Title>{patient.name}</Title>
       <div className="card-container">
         <Tabs defaultActiveKey="1" type="card" size="large">
           <TabPane tab="Detalles" key="1">
             <div className="flex--columns">
-              <Text>Email: {details.email}</Text>
-              <Text>DNI: {details.dni}</Text>
+              <Text>Email: {patient.email}</Text>
+              <Text>DNI: {patient.dni}</Text>
             </div>
           </TabPane>
           <TabPane tab="Historia Clinica" key="2">
             <div className="flex--columns">
-              <EMR emr={details.emr} />
+              <EMR emr={patient.emr} />
             </div>
           </TabPane>
         </Tabs>
