@@ -12,6 +12,7 @@ import "./styles.less"
 import { toAppointments } from "../Appointments/routes"
 import { toPatients } from "../Patients/routes"
 import { toQueue } from "../Queue/routes"
+import { toTest } from "../components/TestComponent/route"
 
 const { Sider } = Layout
 
@@ -90,6 +91,16 @@ export const PlatformNavigation = () => {
           }}
         >
           Turnos
+        </Menu.Item>
+        <Menu.Item
+          key={toTest()}
+          style={{ color: "white" }}
+          icon={<DesktopOutlined />}
+          onClick={() => {
+            navigate(toTest())
+          }}
+        >
+          Test
         </Menu.Item>
       </Menu>
     </Sider>

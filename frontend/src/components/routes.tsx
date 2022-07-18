@@ -4,7 +4,7 @@ import { PatientDetails, Patients } from "../Patients"
 import { Appointments, NewAppointment } from "../Appointments"
 import { TC } from "./TestComponent"
 
-export const routes = (
+export const authRoutes = (
   <Routes>
     <Route path="/" element={<Queue />}></Route>
     <Route path="/pacientes" element={<Patients />}></Route>
@@ -12,5 +12,12 @@ export const routes = (
     <Route path="/turnos" element={<Appointments />}></Route>
     <Route path="/turnos/nuevo" element={<NewAppointment />}></Route>
     <Route path="/test" element={<TC />}></Route>
+    <Route element={() => <div>404 Not Found!</div>}></Route>
+  </Routes>
+)
+
+export const routes = (
+  <Routes>
+    <Route element={() => <div>404 Not Found!</div>}></Route>
   </Routes>
 )
