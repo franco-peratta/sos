@@ -1,17 +1,22 @@
-import { useState } from "react"
 import { BrowserRouter } from "react-router-dom"
 import { Page } from "../Page"
-import { authRoutes, routes } from "../components/routes"
+import { authRoutes } from "../components/routes"
+import { useAuth } from "../Auth"
+import { LoginPage } from "../Auth"
 import "antd/dist/antd.less"
 
 export const RootComponent = () => {
-  const [auth, setauth] = useState(true)
+  const auth = useAuth()
 
-  return auth ? (
-    <BrowserRouter>
-      <Page>{authRoutes}</Page>
-    </BrowserRouter>
-  ) : (
-    <BrowserRouter>{routes}</BrowserRouter>
-  )
+  console.log({ auth })
+
+  if (auth) {
+    return (
+      <BrowserRouter>
+        <Page>{authRoutes}</Page>
+      </BrowserRouter>
+    )
+  }
+
+  return <LoginPage />
 }

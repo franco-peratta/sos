@@ -18,6 +18,11 @@ export const authRoutes = (
 
 export const routes = (
   <Routes>
-    <Route element={() => <div>404 Not Found!</div>}></Route>
+    <Route
+      path="*"
+      element={() => {
+        return <div>404 Not Found!</div>
+      }}
+    />
   </Routes>
 )

@@ -10,7 +10,7 @@ export const TC = () => {
   return (
       <Jitsi
         containerStyles={{height:"100%", width:"100%"}}
-        //roomName={roomName}
+        roomName={roomName}
         displayName={displayName}
         password={password}
         onMeetingEnd={() => console.log("Meeting has ended")}
