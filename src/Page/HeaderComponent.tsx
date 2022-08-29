@@ -1,15 +1,80 @@
 import { CSSProperties } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Avatar, Layout, Menu, Dropdown, Button } from "antd"
-import { UserOutlined } from "@ant-design/icons"
+import {
+  DesktopOutlined,
+  FileOutlined,
+  PieChartOutlined,
+  UserOutlined
+} from "@ant-design/icons"
 import { signOut } from "../firebase/auth"
+import { toTest } from "../components/TestComponent/route"
+import { toAppointments } from "../Appointments/routes"
+import { toPatients } from "../Patients/routes"
+import { toQueue } from "../Queue/routes"
 
 const { Header } = Layout
 
 export const HeaderComponent = () => {
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+
+  const items = [
+    {
+      label: "Agenda",
+      key: "/",
+      icon: <PieChartOutlined />,
+      onClick: () => {
+        navigate(toQueue())
+      }
+    },
+    {
+      label: "Pacientes",
+      key: "/pacientes",
+      icon: <DesktopOutlined />,
+      onClick: () => {
+        navigate(toPatients())
+      }
+    },
+    {
+      label: "Turnos",
+      key: "/turnos",
+      icon: <PieChartOutlined />,
+      onClick: () => {
+        navigate(toAppointments())
+      }
+    },
+    {
+      label: "Test",
+      key: "/test",
+      icon: <DesktopOutlined />,
+      onClick: () => {
+        navigate(toTest())
+      }
+    }
+  ]
+
   return (
-    <Header style={header}>
+    <Header>
       <div className="flex--space-between">
-        <img src="/img/sos-logo.png" alt="Salud Online Solidaria" />
+        <img
+          width="100px"
+          src="/img/sos-logo.png"
+          alt="Salud Online Solidaria"
+        />
+        <Menu
+          theme="dark"
+          style={{ width: "500px" }}
+          mode="horizontal"
+          defaultSelectedKeys={["/"]}
+          selectedKeys={[`/${pathname.split("/")[1]}`]}
+          items={items.map(({ key, label, onClick, icon }) => ({
+            key: key,
+            label: label,
+            onClick: onClick,
+            icon: icon
+          }))}
+        />
         <UserDropdown />
       </div>
     </Header>
@@ -30,13 +95,6 @@ const UserDropdown = () => {
       <Avatar style={avatar} size={52} icon={<UserOutlined />} />
     </Dropdown>
   )
-}
-
-const header: CSSProperties = {
-  backgroundColor: "#fff",
-  height: "auto",
-  padding: "0 1.5em",
-  borderBottom: "1px solid black"
 }
 
 const avatar: CSSProperties = {
