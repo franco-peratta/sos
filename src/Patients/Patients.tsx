@@ -56,56 +56,6 @@ const dataSource = [
   }
 ]
 
-const tableColumns = [
-  {
-    key: "id",
-    title: "ID",
-    dataIndex: "id"
-  },
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (_: any, record: Patient) => (
-      <Link
-        onClick={() => {
-          console.log(record)
-        }}
-      >
-        {record.name}
-      </Link>
-    )
-  },
-  {
-    key: "dni",
-    title: "DNI",
-    dataIndex: "dni"
-  },
-  {
-    key: "email",
-    title: "email",
-    dataIndex: "email"
-  },
-  {
-    key: "edit",
-    title: "",
-    dataIndex: "edit",
-    render: (_: any, record: Patient) => {
-      return (
-        <div className="icon--hovered">
-          <EditOutlined
-            style={{ fontSize: "1.5em" }}
-            onClick={() => {
-              console.log(record)
-              alert("te lleva a la pantalla de editar pacientes (WIP)")
-            }}
-          />
-        </div>
-      )
-    }
-  }
-]
-
 export const Patients = () => {
   const [data] = useState(dataSource)
   const [filteredData, setFilteredData] = useState(dataSource)
@@ -170,7 +120,7 @@ export const Patients = () => {
         }
       }
     ])
-  }, [])
+  }, [navigate])
 
   const onSearch = useCallback(
     (value: string) => {
@@ -183,7 +133,7 @@ export const Patients = () => {
       )
       setFilteredData(newData)
     },
-    [data, filteredData]
+    [data]
   )
 
   return (

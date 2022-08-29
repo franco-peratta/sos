@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import moment, { Moment } from "moment"
 import {
@@ -62,7 +62,7 @@ export const NewAppointment = () => {
   }
 
   const disabledDates = (current: Moment) => {
-    // Can not select days before today
+    // Cannot select days before today
     return current && current < moment().startOf("day")
   }
 

@@ -1,6 +1,8 @@
-import { FC } from "react"
+import { ReactNode } from "react"
 import "./styles.less"
-
-export const Bubble: FC = ({ children }) => {
+type Props = {
+  children: ReactNode
+}
+export const Bubble = ({ children }: Props) => {
   return <div className="bubble">{children}</div>
 }

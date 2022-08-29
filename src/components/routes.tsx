@@ -3,6 +3,7 @@ import { Queue } from "../Queue"
 import { PatientDetails, Patients } from "../Patients"
 import { Appointments, NewAppointment } from "../Appointments"
 import { TC } from "./TestComponent"
+import { NotFoundPage } from "./NotFoundPage"
 
 export const authRoutes = (
   <Routes>
@@ -12,17 +13,12 @@ export const authRoutes = (
     <Route path="/turnos" element={<Appointments />}></Route>
     <Route path="/turnos/nuevo" element={<NewAppointment />}></Route>
     <Route path="/test" element={<TC />}></Route>
-    <Route element={() => <div>404 Not Found!</div>}></Route>
+    <Route element={<NotFoundPage />}></Route>
   </Routes>
 )
 
 export const routes = (
   <Routes>
-    <Route
-      path="*"
-      element={() => {
-        return <div>404 Not Found!</div>
-      }}
-    />
+    <Route path="*" element={<NotFoundPage />} />
   </Routes>
 )

@@ -1,14 +1,14 @@
 import React from "react"
-import { render } from "react-dom"
+import ReactDOM from "react-dom/client"
 import { RootComponent } from "./Init"
 import "./index.less"
 
-export const renderApp = () =>
-  render(
+const rootElement = document.getElementById("root")
+if (rootElement) {
+  const root = ReactDOM.createRoot(rootElement)
+  root.render(
     <React.StrictMode>
       <RootComponent />
-    </React.StrictMode>,
-    document.getElementById("root")
+    </React.StrictMode>
   )
-
-renderApp()
+}

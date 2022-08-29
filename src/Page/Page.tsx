@@ -1,11 +1,15 @@
-import { FC } from "react"
+import { ReactNode } from "react"
 import { Layout } from "antd"
 import { HeaderComponent } from "./HeaderComponent"
 import { PlatformNavigation } from "../LeftColumn"
 import "./styles.less"
 import "../UI/global_styles.less"
 
-export const Page: FC = ({ children }) => {
+type Props = {
+  children: ReactNode
+}
+
+export const Page = ({ children }: Props) => {
   return (
     <Layout className="layout">
       <HeaderComponent />

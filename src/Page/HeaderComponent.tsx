@@ -1,7 +1,7 @@
 import { CSSProperties } from "react"
 import { Avatar, Layout, Menu, Dropdown, Button } from "antd"
 import { UserOutlined } from "@ant-design/icons"
-import { signOut } from "../Auth"
+import { signOut } from "../firebase/auth"
 
 const { Header } = Layout
 

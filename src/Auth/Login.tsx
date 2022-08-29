@@ -1,6 +1,6 @@
 import { Button, Form, Input, Layout, Typography, Image } from "antd"
 import { useState } from "react"
-import { signIn } from "."
+import { signIn } from "../firebase/auth"
 
 const { Text } = Typography
 
