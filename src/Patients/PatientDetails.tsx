@@ -16,6 +16,7 @@ const patients: Patient[] = [
     id: "1",
     name: "Mike",
     dni: "1",
+    dob: "20/06/1995",
     email: "fperatta@teladoc.com",
     emr: {
       id: String(1),
@@ -34,35 +35,41 @@ const patients: Patient[] = [
   {
     id: "2",
     name: "Homer",
+    dob: "20/06/1995",
     dni: "2",
     email: "homer@gmail.com"
   },
   {
     id: "3",
     name: "Paco",
+    dob: "20/06/1995",
     dni: "3",
     email: "paco@gmail.com"
   },
   {
     id: "4",
+    dob: "20/06/1995",
     name: "Joel",
     dni: "4",
     email: "joel@gmail.com"
   },
   {
     id: "5",
+    dob: "20/06/1995",
     name: "Mendi",
     dni: "5",
     email: "mendi@gmail.com"
   },
   {
     id: "6",
+    dob: "20/06/1995",
     name: "Claxton",
     dni: "6",
     email: "claxton@gmail.com"
   },
   {
     id: "7",
+    dob: "20/06/1995",
     name: "Andy",
     dni: "7",
     email: "andy@gmail.com"

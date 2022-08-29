@@ -14,6 +14,7 @@ const loadAppointments = () => {
         id: "7",
         name: "Andy",
         dni: "38919769",
+        dob: "20/06/1995",
         email: "andy@gmail.com"
       },
       providerId: "marcos",
@@ -25,6 +26,7 @@ const loadAppointments = () => {
       patient: {
         id: "7",
         name: "Andy",
+        dob: "20/06/1995",
         dni: "38919769",
         email: "andy@gmail.com"
       },
@@ -37,6 +39,7 @@ const loadAppointments = () => {
       date: moment(),
       patient: {
         id: "7",
+        dob: "20/06/1995",
         name: "Andy",
         dni: "38919769",
         email: "andy@gmail.com"
@@ -49,6 +52,7 @@ const loadAppointments = () => {
       date: moment(),
       patient: {
         id: "7",
+        dob: "20/06/1995",
         name: "Andy",
         dni: "38919769",
         email: "andy@gmail.com"

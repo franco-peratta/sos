@@ -4,61 +4,18 @@ import { EditOutlined, PlusOutlined } from "@ant-design/icons"
 import { Bubble } from "../components/Bubble"
 import { Patient } from "./model"
 import { useNavigate } from "react-router-dom"
-import { toPatients } from "./routes"
+import { toPatients, toPatientsCreate } from "./routes"
+import { getPatients } from "./Handler"
 
 // See EditableTable in https://ant.design/components/table/
 
 const { Search } = Input
 const { Title, Link } = Typography
 
-const dataSource = [
-  {
-    id: "1",
-    name: "Mike",
-    dni: "1",
-    email: "fperatta@teladoc.com"
-  },
-  {
-    id: "2",
-    name: "Homer",
-    dni: "2",
-    email: "homer@gmail.com"
-  },
-  {
-    id: "3",
-    name: "Paco",
-    dni: "3",
-    email: "paco@gmail.com"
-  },
-  {
-    id: "4",
-    name: "Joel",
-    dni: "4",
-    email: "joel@gmail.com"
-  },
-  {
-    id: "5",
-    name: "Mendi",
-    dni: "5",
-    email: "mendi@gmail.com"
-  },
-  {
-    id: "6",
-    name: "Claxton",
-    dni: "6",
-    email: "claxton@gmail.com"
-  },
-  {
-    id: "7",
-    name: "Andy",
-    dni: "7",
-    email: "andy@gmail.com"
-  }
-]
-
 export const Patients = () => {
-  const [data] = useState(dataSource)
-  const [filteredData, setFilteredData] = useState(dataSource)
+  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState<any[]>([])
+  const [filteredData, setFilteredData] = useState<any[]>([])
   const [columns, setColumns] = useState<
     {
       key: string
@@ -71,7 +28,15 @@ export const Patients = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    setColumns([
+    getPatients().then((patients) => {
+      setData(patients)
+      setFilteredData(patients)
+      setLoading(false)
+    })
+  }, [])
+
+  useEffect(() => {
+    const columnsSchema = [
       {
         key: "id",
         title: "ID",
@@ -119,15 +84,16 @@ export const Patients = () => {
           )
         }
       }
-    ])
+    ]
+    setColumns(columnsSchema)
   }, [navigate])
 
   const onSearch = useCallback(
     (value: string) => {
       if (!value) setFilteredData(data)
 
-      const newData: typeof data = data.filter(
-        ({ name, dni }) =>
+      const newData: typeof data = data?.filter(
+        ({ name, dni }: { name: string; dni: string }) =>
           name.toLowerCase().includes(value.toLowerCase()) ||
           dni.includes(value)
       )
@@ -141,7 +107,13 @@ export const Patients = () => {
       <Space size="large" direction="vertical" style={{ width: "100%" }}>
         <div className="flex--space-between">
           <Title>Pacientes</Title>
-          <Button onClick={() => {}} type="default" size="large">
+          <Button
+            onClick={() => {
+              navigate(toPatientsCreate())
+            }}
+            type="default"
+            size="large"
+          >
             <Space direction="horizontal">
               <PlusOutlined />
               Crear paciente
@@ -156,7 +128,12 @@ export const Patients = () => {
           onSearch={onSearch}
         />
 
-        <Table key="table" dataSource={filteredData} columns={columns} />
+        <Table
+          key="table"
+          dataSource={filteredData}
+          columns={columns}
+          loading={loading}
+        />
       </Space>
     </Bubble>
   )
