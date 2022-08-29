@@ -1,9 +1,7 @@
-import { CSSProperties } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Avatar, Layout, Menu, Dropdown, Button } from "antd"
 import {
   DesktopOutlined,
-  FileOutlined,
   PieChartOutlined,
   UserOutlined
 } from "@ant-design/icons"
@@ -56,13 +54,15 @@ export const HeaderComponent = () => {
 
   return (
     <Header>
-      <div className="flex--space-between">
+      <div className="header">
         <img
-          width="100px"
+          className="left"
           src="/img/sos-logo.png"
           alt="Salud Online Solidaria"
+          onClick={() => navigate("/")}
         />
         <Menu
+          className="center"
           theme="dark"
           style={{ width: "500px" }}
           mode="horizontal"
@@ -75,7 +75,9 @@ export const HeaderComponent = () => {
             icon: icon
           }))}
         />
-        <UserDropdown />
+        <div className="right">
+          <UserDropdown />
+        </div>
       </div>
     </Header>
   )
@@ -92,11 +94,7 @@ const UserDropdown = () => {
 
   return (
     <Dropdown overlay={menu} trigger={["click"]}>
-      <Avatar style={avatar} size={52} icon={<UserOutlined />} />
+      <Avatar style={{ cursor: "pointer" }} size={52} icon={<UserOutlined />} />
     </Dropdown>
   )
-}
-
-const avatar: CSSProperties = {
-  cursor: "pointer"
 }
