@@ -87,8 +87,6 @@ export const PatientDetails = () => {
 
   if (!patient) return <Loader />
 
-  const text = "some text"
-
   return (
     <Bubble>
       <Title>{patient.name}</Title>

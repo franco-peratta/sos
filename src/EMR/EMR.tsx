@@ -1,4 +1,4 @@
-import { Typography, Collapse, Button, Space, Modal } from "antd"
+import { Typography, Collapse, Button, Space } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
 import { EmrType } from "./model"
 import { useState } from "react"

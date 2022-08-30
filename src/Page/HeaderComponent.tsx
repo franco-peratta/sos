@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom"
-import { Avatar, Layout, Menu, Dropdown, Button } from "antd"
+import { Avatar, Layout, Menu, Dropdown } from "antd"
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -83,13 +83,25 @@ export const HeaderComponent = () => {
   )
 }
 
+const options = [
+  {
+    label: "Cerrar Sesion",
+    key: "signOut",
+    onClick: signOut,
+    icon: <></>
+  }
+]
 const UserDropdown = () => {
   const menu = (
-    <Menu onClick={console.log}>
-      <Button type="text" onClick={signOut}>
-        Cerrar Sesion
-      </Button>
-    </Menu>
+    <Menu
+      onClick={console.log}
+      items={options.map(({ key, label, onClick, icon }) => ({
+        key: key,
+        label: label,
+        onClick: onClick,
+        icon: icon
+      }))}
+    />
   )
 
   return (
