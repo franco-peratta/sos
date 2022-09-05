@@ -42,7 +42,7 @@ export const PatientDetails = () => {
           </TabPane>
           <TabPane tab="Historia Clinica" key="2">
             <div className="flex--columns">
-              <EMR emr={patient.emr} />
+              <EMR id={patient.id} />
             </div>
           </TabPane>
         </Tabs>

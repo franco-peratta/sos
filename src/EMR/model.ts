@@ -1,11 +1,6 @@
-import { Moment } from "moment"
-
-type EmrContent = {
-  date: Moment
+export type EmrContent = {
+  date: string
   text: string
 }
 
-export type EmrType = {
-  id: string
-  data: EmrContent[]
-}
+export type EmrType = EmrContent[]

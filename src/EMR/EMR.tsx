@@ -1,22 +1,37 @@
-import { Typography, Collapse, Button, Space } from "antd"
+import { Typography, Collapse, Button, Space, message } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
-import { EmrType } from "./model"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { EmrSettingsModal } from "./EmrSettingsModal"
+import { addEMR, getEMR } from "./Handler"
+import { EmrType } from "./model"
 
-const { Text } = Typography
+const { Text, Paragraph } = Typography
 const { Panel } = Collapse
 
 type EmrProps = {
-  emr?: EmrType
+  id: string
 }
-export const EMR = ({ emr }: EmrProps) => {
+export const EMR = ({ id }: EmrProps) => {
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [emr, setEmr] = useState<EmrType>()
 
-  if (!emr) return <Text>No hay historias clinicas cargadas</Text>
+  useEffect(() => {
+    getEMR(id).then((res) => {
+      setEmr(res)
+    })
+  }, [id])
 
-  const handleOk = () => {
+  const handleOk = (newEMR: any) => {
     setIsModalVisible(false)
+    addEMR(id, emr, newEMR)
+      .then((res) => {
+        message.success("Historia clinica guardada")
+        setEmr(res)
+      })
+      .catch((e) => {
+        message.error("Error al guardar la historia clinica")
+        console.error(e)
+      })
   }
 
   const handleCancel = () => {
@@ -39,13 +54,17 @@ export const EMR = ({ emr }: EmrProps) => {
           </Button>
         </div>
         <div>
-          {emr.data.map((hc, index) => (
-            <Collapse key={`hc-${index}`}>
-              <Panel header={hc.date.format("DD/MM/YYYY")} key={index}>
-                <Text>{hc.text}</Text>
-              </Panel>
-            </Collapse>
-          ))}
+          {emr ? (
+            emr.map((hc, index) => (
+              <Collapse key={`hc-${index}`}>
+                <Panel header={hc.date} key={index}>
+                  <Text>{hc.text}</Text>
+                </Panel>
+              </Collapse>
+            ))
+          ) : (
+            <Text>No hay historias clinicas cargadas</Text>
+          )}
         </div>
       </Space>
 

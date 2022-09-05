@@ -1,4 +1,4 @@
-import { DatePicker, Form, Input, Modal } from "antd"
+import { DatePicker, Form, Input, message, Modal } from "antd"
 import moment, { Moment } from "moment"
 import { EmrType } from "./model"
 
@@ -6,7 +6,7 @@ const { TextArea } = Input
 
 type EmrSettingsProps = {
   visible: boolean
-  handleOk: () => void
+  handleOk: (emr: any) => void
   handleCancel: () => void
   emr?: EmrType
 }
@@ -30,12 +30,17 @@ export const EmrSettingsModal = ({
     form
       .validateFields()
       .then(() => {
-        console.log(form.getFieldsValue())
-        // @TODO call api or do something with the data
-        handleOk()
+        const values = {
+          date: moment(form.getFieldsValue().date).format("DD/MM/YYYY"),
+          text: form.getFieldsValue().text
+        }
+        handleOk(values)
         form.resetFields()
       })
-      .catch(() => console.log("error"))
+      .catch((e) => {
+        console.error(e)
+        message.error("Error al añadir un paciente nuevo")
+      })
   }
 
   return (

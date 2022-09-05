@@ -15,22 +15,7 @@ export const getPatients = async () => {
 export const getPatientById = async (id: string) => {
   const snap = await getDoc(doc(db, "patients", id))
 
-  if (snap.exists()) {
-    console.log(snap.data())
-    return snap.data() as Patient
-  } else {
-    console.log("No such document")
-    return null
-  }
-
-  // const patientsRef = collection(db, "patients")
-  // const q = query(patientsRef, where("id", "==", id))
-
-  // const querySnapshot = await getDocs(q)
-  // querySnapshot.forEach((doc) => {
-  //   // doc.data() is never undefined for query doc snapshots
-  //   console.log(doc.id, " => ", doc.data())
-  // })
+  return { id: snap.id, ...snap.data() } as Patient
 }
 
 export const addPatient = (patient: Patient) => {
