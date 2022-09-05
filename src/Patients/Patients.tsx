@@ -14,8 +14,8 @@ const { Title, Link } = Typography
 
 export const Patients = () => {
   const [loading, setLoading] = useState(true)
-  const [data, setData] = useState<any[]>([])
-  const [filteredData, setFilteredData] = useState<any[]>([])
+  const [data, setData] = useState<Patient[]>([])
+  const [filteredData, setFilteredData] = useState<Patient[]>([])
   const [columns, setColumns] = useState<
     {
       key: string
@@ -37,11 +37,6 @@ export const Patients = () => {
 
   useEffect(() => {
     const columnsSchema = [
-      {
-        key: "id",
-        title: "ID",
-        dataIndex: "id"
-      },
       {
         title: "Name",
         dataIndex: "name",
@@ -130,6 +125,7 @@ export const Patients = () => {
 
         <Table
           key="table"
+          rowKey="c4c400e0-2d2e-11ed-a261-0242ac120002"
           dataSource={filteredData}
           columns={columns}
           loading={loading}

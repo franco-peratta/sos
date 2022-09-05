@@ -5,7 +5,7 @@ import { EmrSettingsModal } from "./EmrSettingsModal"
 import { addEMR, getEMR } from "./Handler"
 import { EmrType } from "./model"
 
-const { Text, Paragraph } = Typography
+const { Text } = Typography
 const { Panel } = Collapse
 
 type EmrProps = {
@@ -41,18 +41,6 @@ export const EMR = ({ id }: EmrProps) => {
   return (
     <>
       <Space size="large" direction="vertical">
-        <div className="flex--end">
-          <Button
-            onClick={() => setIsModalVisible(true)}
-            type="default"
-            size="large"
-          >
-            <Space direction="horizontal">
-              <PlusOutlined />
-              A&ntilde;adir Historia Clinica
-            </Space>
-          </Button>
-        </div>
         <div>
           {emr ? (
             emr.map((hc, index) => (
@@ -65,6 +53,18 @@ export const EMR = ({ id }: EmrProps) => {
           ) : (
             <Text>No hay historias clinicas cargadas</Text>
           )}
+        </div>
+        <div className="flex--end">
+          <Button
+            onClick={() => setIsModalVisible(true)}
+            type="default"
+            size="large"
+          >
+            <Space direction="horizontal">
+              <PlusOutlined />
+              A&ntilde;adir Historia Clinica
+            </Space>
+          </Button>
         </div>
       </Space>
 
