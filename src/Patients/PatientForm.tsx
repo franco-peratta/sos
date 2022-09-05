@@ -1,19 +1,11 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { CloseOutlined } from "@ant-design/icons"
-import {
-  Form,
-  Input,
-  DatePicker,
-  Row,
-  Space,
-  Typography,
-  Button,
-  message
-} from "antd"
+import { Form, Input, DatePicker, Row, Space, Typography, Button } from "antd"
 import { Bubble } from "../components/Bubble"
 import { addPatient } from "./Handler"
 import { toPatients } from "./routes"
+import { errorNotification, successNotification } from "../Notification"
 
 const { Title } = Typography
 
@@ -33,12 +25,12 @@ export const PatientForm = (props: Props) => {
       .then(async () => {
         await addPatient({ ...values, date: values.date.format("DD/MM/YYYY") })
         setLoading(false)
-        message.success("Paciente agregado correctamente")
+        successNotification("Paciente agregado correctamente")
         navigate(toPatients())
       })
       .catch((e) => {
         console.log(e)
-        message.error("Error al añadir un paciente nuevo")
+        errorNotification("Error al añadir un paciente nuevo")
         setLoading(false)
       })
   }

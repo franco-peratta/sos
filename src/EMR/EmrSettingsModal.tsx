@@ -1,5 +1,6 @@
-import { DatePicker, Form, Input, message, Modal } from "antd"
+import { DatePicker, Form, Input, Modal } from "antd"
 import moment, { Moment } from "moment"
+import { errorNotification } from "../Notification"
 import { EmrType } from "./model"
 
 const { TextArea } = Input
@@ -39,7 +40,7 @@ export const EmrSettingsModal = ({
       })
       .catch((e) => {
         console.error(e)
-        message.error("Error al añadir un paciente nuevo")
+        errorNotification("Error al añadir un paciente nuevo")
       })
   }
 

@@ -2,13 +2,15 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { CloseOutlined } from "@ant-design/icons"
 import { Patient } from "./model"
-import { message, Tabs, Typography } from "antd"
+import { Tabs, Typography } from "antd"
 import { Bubble } from "../components/Bubble"
 import { Loader } from "../components/Loader"
 import { EMR } from "../EMR"
 import { getPatientById } from "./Handler"
-import "./styles.less"
 import { toPatients } from "./routes"
+import { errorNotification } from "../Notification"
+
+import "./styles.less"
 
 const { Title, Text } = Typography
 const { TabPane } = Tabs
@@ -24,7 +26,7 @@ export const PatientDetails = () => {
     if (id)
       getPatientById(id).then((res) => {
         if (!res) {
-          message.error("Paciente no encontrado")
+          errorNotification("Paciente no encontrado")
           return
         }
         setPatient(res)

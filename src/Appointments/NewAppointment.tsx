@@ -10,8 +10,7 @@ import {
   Space,
   Button,
   Select,
-  Steps,
-  message
+  Steps
 } from "antd"
 import { CloseOutlined } from "@ant-design/icons"
 import { toAppointments } from "./routes"
@@ -22,6 +21,8 @@ import { getPatients } from "../Patients/Handler"
 import { addAppointment } from "./Handler"
 import { APPOINTMENT_STATUS } from "./Model"
 import { v4 as uuidv4 } from "uuid"
+import { errorNotification, successNotification } from "../Notification"
+
 import "./styles.less"
 
 const { Option } = Select
@@ -78,10 +79,10 @@ export const NewAppointment = () => {
     addAppointment(patientId, appointment)
       .then(() => {
         navigate(toAppointments())
-        message.success("Turno creado correctamente")
+        successNotification("Turno creado correctamente")
       })
       .catch((e) => {
-        message.error("Error al crear el turno")
+        errorNotification("Error al crear el turno")
         console.error(e)
       })
   }

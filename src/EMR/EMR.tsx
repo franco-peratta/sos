@@ -1,9 +1,10 @@
-import { Typography, Collapse, Button, Space, message } from "antd"
+import { Typography, Collapse, Button, Space } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
 import { useEffect, useState } from "react"
 import { EmrSettingsModal } from "./EmrSettingsModal"
 import { addEMR, getEMR } from "./Handler"
 import { EmrType } from "./model"
+import { errorNotification, successNotification } from "../Notification"
 
 const { Text } = Typography
 const { Panel } = Collapse
@@ -25,11 +26,11 @@ export const EMR = ({ id }: EmrProps) => {
     setIsModalVisible(false)
     addEMR(id, emr, newEMR)
       .then((res) => {
-        message.success("Historia clinica guardada")
+        successNotification("Historia clinica guardada")
         setEmr(res)
       })
       .catch((e) => {
-        message.error("Error al guardar la historia clinica")
+        errorNotification("Error al guardar la historia clinica")
         console.error(e)
       })
   }

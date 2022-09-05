@@ -8,8 +8,7 @@ import {
   Row,
   Tag,
   Col,
-  Popconfirm,
-  message
+  Popconfirm
 } from "antd"
 import {
   PlusOutlined,
@@ -17,15 +16,12 @@ import {
   ApiOutlined,
   DeleteOutlined
 } from "@ant-design/icons"
-import { toAppointments, toCreateAppointment } from "./routes"
+import { toCreateAppointment } from "./routes"
 import { Bubble } from "../components/Bubble"
-import {
-  Appointment,
-  AppointmentWithPatientInfo,
-  statusColorMapping
-} from "./Model"
+import { AppointmentWithPatientInfo, statusColorMapping } from "./Model"
 import { deleteAppointment, getAppointments } from "./Handler"
 import { Loader } from "../components/Loader"
+import { infoNotification, successNotification } from "../Notification"
 
 const { Title, Text } = Typography
 const { Meta } = Card
@@ -50,10 +46,10 @@ export const Appointments = () => {
           setAppointments(
             appointments.filter((app) => app.id !== appointment.id)
           )
-          message.success("Turno borrado con exito")
+          successNotification("Turno borrado con exito")
         })
         .catch((e) => {
-          message.success("Error al borrar el turno")
+          successNotification("Error al borrar el turno")
           console.error(e)
         })
     }
@@ -109,8 +105,7 @@ export const Appointments = () => {
                   //   placement="top"
                   //   title={"Está seguro que desea finalizar esta llamada?"}
                   //   onConfirm={() => {
-                  //     openNotification(
-                  //       "bottomRight",
+                  //     infoNotification(
                   //       "Llamada finalizada (WIP)"
                   //     )
                   //   }}
@@ -126,14 +121,24 @@ export const Appointments = () => {
                   //     <ApiOutlined key="end" />
                   //   </Space>
                   // </Popconfirm>,
-                  <Space
-                    style={{ fontSize: "1.5em", color: "green" }}
-                    size="middle"
-                    direction="horizontal"
+                  <Popconfirm
+                    placement="top"
+                    title={"Está seguro que desea realizar esta llamada?"}
+                    onConfirm={() => {
+                      infoNotification("Creando llamada")
+                    }}
+                    okText="Si"
+                    cancelText="No"
                   >
-                    Iniciar llamada
-                    <PhoneOutlined key="call" />
-                  </Space>
+                    <Space
+                      style={{ fontSize: "1.5em", color: "green" }}
+                      size="middle"
+                      direction="horizontal"
+                    >
+                      Iniciar llamada
+                      <PhoneOutlined key="call" />
+                    </Space>
+                  </Popconfirm>
                 ]}
               >
                 <div className="flex--space-between ">
