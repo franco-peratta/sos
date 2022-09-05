@@ -8,15 +8,15 @@ import { TC } from "./TestComponent"
 
 export const authRoutes = (
   <Routes>
-    <Route path="/" element={<Queue />}></Route>
-    <Route path="/pacientes" element={<Patients />}></Route>
-    <Route path="/pacientes/:id" element={<PatientDetails />}></Route>
-    <Route path="/pacientes/editar/:id" element={<PatientForm />}></Route>
-    <Route path="/pacientes/nuevo" element={<PatientForm />}></Route>
-    <Route path="/turnos" element={<Appointments />}></Route>
-    <Route path="/turnos/nuevo" element={<NewAppointment />}></Route>
-    <Route path="/test" element={<TC />}></Route>
-    <Route element={<NotFoundPage />}></Route>
+    <Route path="/" element={<Queue />} />
+    <Route path="/pacientes" element={<Patients />} />
+    <Route path="/pacientes/:id" element={<PatientDetails />} />
+    <Route path="/pacientes/editar/:id" element={<PatientForm />} />
+    <Route path="/pacientes/nuevo" element={<PatientForm />} />
+    <Route path="/turnos" element={<Appointments />} />
+    <Route path="/turnos/nuevo" element={<NewAppointment />} />
+    <Route path="/test" element={<TC />} />
+    <Route path="*" element={<NotFoundPage />} />
   </Routes>
 )
 
