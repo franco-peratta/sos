@@ -1,9 +1,8 @@
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import moment, { Moment } from "moment"
 import {
   Form,
-  Input,
   Typography,
   DatePicker,
   TimePicker,
@@ -11,54 +10,80 @@ import {
   Space,
   Button,
   Select,
-  Steps
+  Steps,
+  message
 } from "antd"
 import { CloseOutlined } from "@ant-design/icons"
 import { toAppointments } from "./routes"
 import { Bubble } from "../components/Bubble"
-import { validateInitialStep } from "./Handler"
+
+import { Patient } from "../Patients/model"
+import { getPatients } from "../Patients/Handler"
+import { addAppointment } from "./Handler"
+import { APPOINTMENT_STATUS } from "./Model"
+import { v4 as uuidv4 } from "uuid"
 import "./styles.less"
 
 const { Option } = Select
 const { Title } = Typography
 const { Step } = Steps
 
-const steps = ["Ingresar DNI", "Elegir fecha", "Validar datos"]
+const steps = ["Elegir paciente", "Elegir fecha", "Validar datos"]
 
 export const NewAppointment = () => {
+  const navigate = useNavigate()
+
   const [idForm] = Form.useForm()
   const [detailsForm] = Form.useForm()
 
   const [current, setCurrent] = useState(0)
-  const [options, setOptions] = useState(["Cami", "Marcos", "Lucrecia"])
+  const [medics, setMedics] = useState<string[]>()
+  const [patients, setPatients] = useState<Patient[]>()
 
-  const navigate = useNavigate()
+  useEffect(() => {
+    getPatients().then(setPatients)
+    setMedics(["Cami", "Marcos", "Lucrecia"])
+  }, [])
 
   const next = useCallback(() => {
     if (current === 0) {
-      const patient = validateInitialStep(idForm.getFieldValue("id"))
-      // @TODO do something with this patient. check if it exits or not
-      console.log(patient)
       idForm
         .validateFields()
-        .then(() => setCurrent(current + 1))
+        .then(() => setCurrent((current) => current + 1))
         .catch(() => {})
     }
     if (current === 1) {
       detailsForm
         .validateFields()
-        .then(() => setCurrent(current + 1))
+        .then(() => setCurrent((current) => current + 1))
         .catch(() => {})
     }
   }, [idForm, detailsForm, current])
 
   const prev = () => {
-    setCurrent(current - 1)
+    setCurrent((prev) => prev - 1)
   }
 
   const submit = () => {
-    console.log(idForm.getFieldsValue())
-    console.log(detailsForm.getFieldsValue())
+    const patientId = idForm.getFieldsValue().patient
+    const values = detailsForm.getFieldsValue()
+    const appointment = {
+      id: uuidv4(),
+      status: APPOINTMENT_STATUS.pendiente,
+      date: values.date.format("DD/MM/YYYY"),
+      time: values.time.format("HH:mm"),
+      providerId: values.medic
+    }
+
+    addAppointment(patientId, appointment)
+      .then(() => {
+        navigate(toAppointments())
+        message.success("Turno creado correctamente")
+      })
+      .catch((e) => {
+        message.error("Error al crear el turno")
+        console.error(e)
+      })
   }
 
   const disabledDates = (current: Moment) => {
@@ -97,63 +122,50 @@ export const NewAppointment = () => {
             style={{ display: current === 0 ? "inherit" : "none" }}
           >
             <Form.Item
-              name="id"
-              label="Numero de documento / ID"
-              rules={[{ required: true, message: "Por favor, ingrese un id" }]}
+              name="patient"
+              label="Paciente"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor, elija un paciente"
+                }
+              ]}
             >
-              <Input
-                allowClear
-                type="number"
+              <Select
+                showSearch
                 size="large"
-                placeholder="Numero de documento / ID"
-                maxLength={10}
-              />
+                style={{ width: 200 }}
+                placeholder="Paciente"
+                optionFilterProp="children"
+                // filterOption={(input, option) => {
+                //   if (option && option.children) {
+                //     return (
+                //       option.children
+                //         .toString()
+                //         .toLowerCase()
+                //         .indexOf(input.toLowerCase()) >= 0
+                //     )
+                //   }
+                //   return false
+                // }}
+                loading={!patients}
+              >
+                {patients &&
+                  patients.map((p, index) => (
+                    <Option key={index} value={p.id}>
+                      {p.name}
+                    </Option>
+                  ))}
+              </Select>
             </Form.Item>
           </Form>
+
           <Form
             form={detailsForm}
             layout="vertical"
             name="details"
             style={{ display: current === 1 ? "inherit" : "none" }}
           >
-            <Form.Item
-              name="name"
-              label="Nombre"
-              rules={[
-                { required: true, message: "Por favor, ingrese su nombre" }
-              ]}
-            >
-              <Input allowClear size="large" placeholder="Nombre" />
-            </Form.Item>
-            <Form.Item
-              name="lastname"
-              label="Apellido"
-              rules={[
-                {
-                  required: true,
-                  message: "Por favor, ingrese su apellido"
-                }
-              ]}
-            >
-              <Input allowClear size="large" placeholder="Apellido" />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              label="Correo Electronico"
-              rules={[
-                {
-                  type: "email",
-                  message: "La direccion de correo electronico no es valida"
-                },
-                {
-                  required: true,
-                  message:
-                    "Por favor, ingrese su direccion de correo electronico"
-                }
-              ]}
-            >
-              <Input allowClear size="large" placeholder="ejemplo@email.com" />
-            </Form.Item>
             <Form.Item
               name="medic"
               label="Especialista"
@@ -191,12 +203,14 @@ export const NewAppointment = () => {
                   return 0
                 }}
                 onChange={onMedicChange}
+                loading={!medics}
               >
-                {options.map((option, index) => (
-                  <Option key={index} value={option}>
-                    {option}
-                  </Option>
-                ))}
+                {medics &&
+                  medics.map((option, index) => (
+                    <Option key={index} value={option}>
+                      {option}
+                    </Option>
+                  ))}
               </Select>
             </Form.Item>
             <Row>

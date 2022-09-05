@@ -1,3 +1,4 @@
+import { Appointment } from "../Appointments/Model"
 import { EmrType } from "../EMR/model"
 
 export type Patient = {
@@ -7,4 +8,5 @@ export type Patient = {
   dob: string
   email: string
   emr?: EmrType
+  appointments?: Appointment[]
 }

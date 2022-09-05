@@ -1,19 +1,29 @@
-import { Moment } from "moment"
-import { Patient } from "../Patients/model"
-
 export type Appointment = {
   id: string
-  date: Moment
-  patient: Patient
+  date: string
+  time: string
   providerId: string
   status: AppointmentStatus
   reasons?: string
 }
 
-export type AppointmentStatus = "pendiente" | "actual" | "terminado"
+export type AppointmentWithPatientInfo = Appointment & {
+  patientId: string
+  patientName?: string
+  patientEmail?: string
+}
+
+// export type AppointmentStatus = "pendiente" | "en progreso" | "terminado"
+export const APPOINTMENT_STATUS = {
+  pendiente: "pendiente",
+  "en progreso": "en progreso",
+  terminado: "terminado"
+} as const
+export type AppointmentStatus =
+  typeof APPOINTMENT_STATUS[keyof typeof APPOINTMENT_STATUS]
 
 export const statusColorMapping = {
   pendiente: "blue",
-  actual: "green",
+  "en progreso": "green",
   terminado: "red"
 }
