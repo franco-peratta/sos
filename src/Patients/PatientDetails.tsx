@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { Tabs, Typography } from "antd"
+import { message, Tabs, Typography } from "antd"
 import { Patient } from "./model"
 import { Bubble } from "../components/Bubble"
 import { Loader } from "../components/Loader"
@@ -20,7 +20,7 @@ export const PatientDetails = () => {
     if (id)
       getPatientById(id).then((res) => {
         if (!res) {
-          console.log("Mostrar toastr de error o 404")
+          message.error("Paciente no encontrado")
           return
         }
         setPatient(res)
