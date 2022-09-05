@@ -55,8 +55,6 @@ export const Appointments = () => {
     }
   }
 
-  console.log(appointments)
-
   return (
     <Bubble>
       <div className="flex--space-between">

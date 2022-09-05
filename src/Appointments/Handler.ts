@@ -32,8 +32,6 @@ export const addAppointment = async (
 ) => {
   const patient = await getPatientById(patientId)
 
-  console.log(appointment)
-
   if (patient.appointments) {
     patient.appointments = [...patient.appointments, appointment]
   } else {

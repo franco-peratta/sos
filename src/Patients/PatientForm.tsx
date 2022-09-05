@@ -29,7 +29,7 @@ export const PatientForm = (props: Props) => {
         navigate(toPatients())
       })
       .catch((e) => {
-        console.log(e)
+        console.error(e)
         errorNotification("Error al añadir un paciente nuevo")
         setLoading(false)
       })
