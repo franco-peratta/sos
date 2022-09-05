@@ -6,7 +6,6 @@ import {
   UserOutlined
 } from "@ant-design/icons"
 import { signOut } from "../firebase/auth"
-import { toTest } from "../components/TestComponent/route"
 import { toAppointments } from "../Appointments/routes"
 import { toPatients } from "../Patients/routes"
 import { toQueue } from "../Queue/routes"
@@ -40,14 +39,6 @@ export const HeaderComponent = () => {
       icon: <PieChartOutlined />,
       onClick: () => {
         navigate(toAppointments())
-      }
-    },
-    {
-      label: "Test",
-      key: "/test",
-      icon: <DesktopOutlined />,
-      onClick: () => {
-        navigate(toTest())
       }
     }
   ]

@@ -1,1 +1,0 @@
-export { TC } from "./Component"
