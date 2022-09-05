@@ -1,80 +1,15 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import moment from "moment"
 import { Tabs, Typography } from "antd"
 import { Patient } from "./model"
 import { Bubble } from "../components/Bubble"
 import { Loader } from "../components/Loader"
 import { EMR } from "../EMR"
+import { getPatientById } from "./Handler"
 import "./styles.less"
 
 const { Title, Text } = Typography
 const { TabPane } = Tabs
-
-const patients: Patient[] = [
-  {
-    id: "1",
-    name: "Mike",
-    dni: "1",
-    dob: "20/06/1995",
-    email: "fperatta@teladoc.com",
-    emr: {
-      id: String(1),
-      data: [
-        {
-          date: moment(),
-          text: "Le dolia la cabeza"
-        },
-        {
-          date: moment().add(1, "days"),
-          text: "Le dolia la espalda"
-        }
-      ]
-    }
-  },
-  {
-    id: "2",
-    name: "Homer",
-    dob: "20/06/1995",
-    dni: "2",
-    email: "homer@gmail.com"
-  },
-  {
-    id: "3",
-    name: "Paco",
-    dob: "20/06/1995",
-    dni: "3",
-    email: "paco@gmail.com"
-  },
-  {
-    id: "4",
-    dob: "20/06/1995",
-    name: "Joel",
-    dni: "4",
-    email: "joel@gmail.com"
-  },
-  {
-    id: "5",
-    dob: "20/06/1995",
-    name: "Mendi",
-    dni: "5",
-    email: "mendi@gmail.com"
-  },
-  {
-    id: "6",
-    dob: "20/06/1995",
-    name: "Claxton",
-    dni: "6",
-    email: "claxton@gmail.com"
-  },
-  {
-    id: "7",
-    dob: "20/06/1995",
-    name: "Andy",
-    dni: "7",
-    email: "andy@gmail.com"
-  }
-]
 
 export const PatientDetails = () => {
   const { id } = useParams()
@@ -82,7 +17,14 @@ export const PatientDetails = () => {
   const [patient, setPatient] = useState<Patient>()
 
   useEffect(() => {
-    setPatient(patients.find((patient) => patient.id === id))
+    if (id)
+      getPatientById(id).then((res) => {
+        if (!res) {
+          console.log("Mostrar toastr de error o 404")
+          return
+        }
+        setPatient(res)
+      })
   }, [id])
 
   if (!patient) return <Loader />
