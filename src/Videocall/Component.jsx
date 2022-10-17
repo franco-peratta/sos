@@ -5,6 +5,8 @@ import { Loader } from "../components/Loader"
 import { infoNotification } from "../Notification"
 import { checkPatientIdAndAppId } from "./Handler"
 import { changeAppointmentStatusById } from "../Appointments/Handler"
+import { RightPanel } from "./RightPanel"
+import "./styles.less"
 
 export const Videocall = () => {
   const navigate = useNavigate()
@@ -12,6 +14,13 @@ export const Videocall = () => {
   const [loading, setloading] = useState(true)
   const [error, setError] = useState()
   const [data, setData] = useState()
+  const [collapsed, setCollapsed] = useState(false)
+
+  useEffect(() => {
+    document.getElementById("main").style.paddingLeft = 0
+    document.getElementById("main").style.paddingRight = 0
+    document.getElementById("main").style.paddingTop = 0
+  }, [])
 
   useEffect(() => {
     checkPatientIdAndAppId(patientId, appointmentId)
@@ -42,14 +51,26 @@ export const Videocall = () => {
   }
 
   return (
-    <Jitsi
-      containerStyles={{ height: "100%", width: "100%" }}
-      roomName={roomName}
-      displayName={displayName}
-      password={password}
-      onMeetingEnd={handleMeetingEnd}
-      loadingComponent={<p>loading ...</p>}
-      errorComponent={<p>Oops, something went wrong...</p>}
-    />
+    <div
+      className="videocall-container"
+      style={{
+        gridTemplateColumns: `${collapsed ? "98.5%" : "75%"} auto`
+      }}
+    >
+      <Jitsi
+        containerStyles={{ height: "100%", width: "100%" }}
+        roomName={roomName}
+        displayName={displayName}
+        password={password}
+        onMeetingEnd={handleMeetingEnd}
+        loadingComponent={<p>loading ...</p>}
+        errorComponent={<p>Oops, something went wrong...</p>}
+      />
+      <RightPanel
+        patientInfo={data}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
+    </div>
   )
 }

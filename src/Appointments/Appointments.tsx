@@ -10,12 +10,7 @@ import {
   Col,
   Popconfirm
 } from "antd"
-import {
-  PlusOutlined,
-  PhoneOutlined,
-  ApiOutlined,
-  DeleteOutlined
-} from "@ant-design/icons"
+import { PlusOutlined, PhoneOutlined, DeleteOutlined } from "@ant-design/icons"
 import { toCreateAppointment } from "./routes"
 import { Bubble } from "../components/Bubble"
 import { AppointmentWithPatientInfo, statusColorMapping } from "./Model"

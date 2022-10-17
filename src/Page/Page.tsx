@@ -13,7 +13,9 @@ export const Page = ({ children }: Props) => {
     <Layout className="layout">
       <HeaderComponent />
       <Layout>
-        <div className="content">{children}</div>
+        <main id="main" className="content">
+          {children}
+        </main>
       </Layout>
     </Layout>
   )

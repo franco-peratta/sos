@@ -11,6 +11,7 @@ export type AppointmentWithPatientInfo = Appointment & {
   patientId: string
   patientName?: string
   patientEmail?: string
+  patientEmr?: []
 }
 
 // export type AppointmentStatus = "pendiente" | "en progreso" | "terminado"
