@@ -14,10 +14,11 @@ export const getPatients = async () => {
 
 export const getPatientById = async (id: string) => {
   const snap = await getDoc(doc(db, "patients", id))
-
+  if (!snap.data()) return null
   return { id: snap.id, ...snap.data() } as Patient
 }
 
 export const addPatient = (patient: Patient) => {
-  return addDoc(collection(db, "patients"), patient)
+  console.log(patient)
+  return addDoc(collection(db, "patients"), { ...patient, appointments: [] })
 }

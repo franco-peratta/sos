@@ -7,14 +7,17 @@ export const getAppointments = async () => {
   const patients = await getDocs(collection(db, "patients"))
   let response: AppointmentWithPatientInfo[] = []
   patients.forEach((doc) => {
-    const appointmentsForPatient = doc
-      .data()
-      .appointments.map((app: AppointmentWithPatientInfo) => ({
+    const appointments = doc.data().appointments
+    if (!appointments) return
+
+    const appointmentsForPatient = appointments.map(
+      (app: AppointmentWithPatientInfo) => ({
         ...app,
         patientId: doc.id,
         patientName: doc.data().name,
         patientEmail: doc.data().email
-      }))
+      })
+    )
     response = response.concat(appointmentsForPatient)
   })
 
@@ -32,6 +35,8 @@ export const addAppointment = async (
 ) => {
   const patient = await getPatientById(patientId)
 
+  if (!patient) return
+
   if (patient.appointments) {
     patient.appointments = [...patient.appointments, appointment]
   } else {
@@ -47,6 +52,7 @@ export const deleteAppointment = async (
   appointment: AppointmentWithPatientInfo
 ) => {
   const patient = await getPatientById(appointment.patientId)
+  if (!patient) return
 
   if (!patient.appointments) {
     return null

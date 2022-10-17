@@ -23,7 +23,7 @@ export const PatientForm = (props: Props) => {
     form
       .validateFields()
       .then(async () => {
-        await addPatient({ ...values, date: values.date.format("DD/MM/YYYY") })
+        await addPatient({ ...values, dob: values.dob.format("DD/MM/YYYY") })
         setLoading(false)
         successNotification("Paciente agregado correctamente")
         navigate(toPatients())
@@ -86,7 +86,7 @@ export const PatientForm = (props: Props) => {
           <Space size="large" direction="horizontal">
             <Form.Item
               label="Fecha"
-              name="date"
+              name="dob"
               rules={[
                 {
                   required: true,

@@ -19,21 +19,28 @@ export const PatientDetails = () => {
   const { id } = useParams()
 
   const [patient, setPatient] = useState<Patient>()
+  const [loading, setIsLoading] = useState(true)
 
   const navigate = useNavigate()
 
   useEffect(() => {
     if (id)
-      getPatientById(id).then((res) => {
-        if (!res) {
-          errorNotification("Paciente no encontrado")
-          return
-        }
-        setPatient(res)
-      })
+      getPatientById(id)
+        .then((res) => {
+          if (!res) {
+            return
+          }
+          setPatient(res)
+        })
+        .finally(() => setIsLoading(false))
   }, [id])
 
-  if (!patient) return <Loader />
+  if (loading) return <Loader />
+
+  if (!patient) {
+    errorNotification("Error inesperado")
+    return <span>Error Page goes here - Patient not found</span>
+  }
 
   return (
     <Bubble>
@@ -52,6 +59,7 @@ export const PatientDetails = () => {
             <div className="flex--columns">
               <Text>Email: {patient.email}</Text>
               <Text>DNI: {patient.dni}</Text>
+              <Text>Fecha de Nacimiento: {patient.dob}</Text>
             </div>
           </TabPane>
           <TabPane tab="Historia Clinica" key="2">
