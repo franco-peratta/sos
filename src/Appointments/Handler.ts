@@ -1,11 +1,4 @@
-import {
-  collection,
-  getDocs,
-  doc,
-  setDoc,
-  updateDoc,
-  getDoc
-} from "firebase/firestore"
+import { collection, getDocs, doc, setDoc, getDoc } from "firebase/firestore"
 import { db } from "../firebase/firestore"
 import { getPatientById } from "../Patients/Handler"
 import { Patient } from "../Patients/model"
@@ -30,9 +23,13 @@ export const getAppointments = async () => {
         patientEmail: doc.data().email
       })
     )
-    response = response.concat(appointmentsForPatient)
-  })
 
+    response = response.concat(
+      appointmentsForPatient.filter(
+        (app: AppointmentWithPatientInfo) => app.status !== "terminado"
+      )
+    )
+  })
   return response
 }
 
