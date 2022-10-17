@@ -15,7 +15,6 @@ export const LoginPage = () => {
         console.log({ user })
       })
       .catch(() => {
-        console.log("No me loguie un carajo")
         setError(true)
       })
   }

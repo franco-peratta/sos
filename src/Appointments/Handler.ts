@@ -1,7 +1,19 @@
-import { collection, getDocs, doc, setDoc } from "firebase/firestore"
+import {
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  updateDoc,
+  getDoc
+} from "firebase/firestore"
 import { db } from "../firebase/firestore"
 import { getPatientById } from "../Patients/Handler"
-import { Appointment, AppointmentWithPatientInfo } from "./Model"
+import { Patient } from "../Patients/model"
+import {
+  Appointment,
+  AppointmentStatus,
+  AppointmentWithPatientInfo
+} from "./Model"
 
 export const getAppointments = async () => {
   const patients = await getDocs(collection(db, "patients"))
@@ -23,11 +35,6 @@ export const getAppointments = async () => {
 
   return response
 }
-
-// export const getAppointmentById = async (id: string) => {
-// const snap = await getDoc(doc(db, "patients", id))
-// return { id: snap.id, ...snap.data() } as Patient
-// }
 
 export const addAppointment = async (
   patientId: string,
@@ -65,4 +72,51 @@ export const deleteAppointment = async (
   return setDoc(doc(db, "patients", patient.id), patient)
 
   //@TODO remove it from provider's list of appointments as well
+}
+
+export const changeAppointmentStatus = async (
+  appointment: AppointmentWithPatientInfo,
+  status: AppointmentStatus
+) => {
+  const snap = await getDoc(doc(db, "patients", appointment.patientId))
+  if (!snap.exists()) throw new Error("Paciente no encontrado")
+
+  const patient = { id: snap.id, ...snap.data() } as Patient
+
+  const index = patient.appointments!.findIndex((a) => a.id === appointment.id)
+  if (index < 0) throw new Error("Turno invalido")
+
+  patient.appointments![index] = {
+    id: appointment.id,
+    date: appointment.date,
+    providerId: appointment.providerId,
+    time: appointment.time,
+    status
+  }
+
+  return setDoc(doc(db, "patients", appointment.patientId), patient)
+}
+
+export const changeAppointmentStatusById = async (
+  patientId: string,
+  appointmentId: string,
+  status: AppointmentStatus
+) => {
+  const snap = await getDoc(doc(db, "patients", patientId))
+  if (!snap.exists()) throw new Error("Paciente no encontrado")
+
+  const patient = { id: snap.id, ...snap.data() } as Patient
+
+  const index = patient.appointments!.findIndex((a) => a.id === appointmentId)
+  if (index < 0) throw new Error("Turno invalido")
+
+  patient.appointments![index] = {
+    id: appointmentId,
+    date: patient.appointments![index].date,
+    providerId: patient.appointments![index].providerId,
+    time: patient.appointments![index].time,
+    status
+  }
+
+  return setDoc(doc(db, "patients", patientId), patient)
 }

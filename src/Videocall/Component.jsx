@@ -1,23 +1,44 @@
+import { useEffect, useState } from "react"
 import { Jitsi } from "./jitsi"
 import { useNavigate, useParams } from "react-router-dom"
 import { Loader } from "../components/Loader"
 import { infoNotification } from "../Notification"
+import { checkPatientIdAndAppId } from "./Handler"
+import { changeAppointmentStatusById } from "../Appointments/Handler"
 
 export const Videocall = () => {
   const navigate = useNavigate()
-  const { appointmentId } = useParams()
+  const { patientId, appointmentId } = useParams()
+  const [loading, setloading] = useState(true)
+  const [error, setError] = useState()
+  const [data, setData] = useState()
 
-  if (!appointmentId) return <Loader />
+  useEffect(() => {
+    checkPatientIdAndAppId(patientId, appointmentId)
+      .then((res) => {
+        setData(res)
+      })
+      .catch((error) => {
+        console.log({ error })
+        setError(error.message)
+      })
+      .finally(() => setloading(false))
+  }, [patientId, appointmentId])
+
+  if (loading) return <Loader />
+  if (error) return <span>Error page goes here | {error}</span>
 
   const handleMeetingEnd = () => {
     infoNotification("Videollamada finaliza")
+    changeAppointmentStatusById(data.id, data.appointment.id, "terminado")
     navigate("/")
   }
-
+  // displayName no estaria funcionando
+  // password funciona para el paciente SOLO si el medico se metio antes
   const { roomName, displayName, password } = {
     roomName: appointmentId,
-    displayName: "Dale Loco",
-    password: "password"
+    displayName: `Turno con ${data.name}`,
+    password: data.dni
   }
 
   return (

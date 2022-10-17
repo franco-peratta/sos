@@ -19,7 +19,11 @@ import {
 import { toCreateAppointment } from "./routes"
 import { Bubble } from "../components/Bubble"
 import { AppointmentWithPatientInfo, statusColorMapping } from "./Model"
-import { deleteAppointment, getAppointments } from "./Handler"
+import {
+  changeAppointmentStatus,
+  deleteAppointment,
+  getAppointments
+} from "./Handler"
 import { Loader } from "../components/Loader"
 import { infoNotification, successNotification } from "../Notification"
 
@@ -99,34 +103,20 @@ export const Appointments = () => {
                       <DeleteOutlined key="delete" />
                     </Space>
                   </Popconfirm>,
-                  // <Popconfirm
-                  //   placement="top"
-                  //   title={"Está seguro que desea finalizar esta llamada?"}
-                  //   onConfirm={() => {
-                  //     infoNotification(
-                  //       "Llamada finalizada (WIP)"
-                  //     )
-                  //   }}
-                  //   okText="Si"
-                  //   cancelText="No"
-                  // >
-                  //   <Space
-                  //     style={{ fontSize: "1.5em", color: "red" }}
-                  //     size="middle"
-                  //     direction="horizontal"
-                  //   >
-                  //     Finalizar llamada
-                  //     <ApiOutlined key="end" />
-                  //   </Space>
-                  // </Popconfirm>,
                   <Popconfirm
                     placement="top"
                     title={"Está seguro que desea realizar esta llamada?"}
                     onConfirm={() => {
                       infoNotification("Creando llamada")
+                      changeAppointmentStatus(app, "en progreso")
+                        .then(() =>
+                          navigate(`/videocall/${app.patientId}/${app.id}`)
+                        )
+                        .catch(() => console.log("@TODO catchear el error"))
                     }}
                     okText="Si"
                     cancelText="No"
+                    disabled={app.status === "terminado"}
                   >
                     <Space
                       style={{ fontSize: "1.5em", color: "green" }}

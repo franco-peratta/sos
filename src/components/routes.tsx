@@ -15,7 +15,10 @@ export const authRoutes = (
     <Route path="/pacientes/nuevo" element={<PatientForm />} />
     <Route path="/turnos" element={<Appointments />} />
     <Route path="/turnos/nuevo" element={<NewAppointment />} />
-    <Route path="/videocall/:appointmentId" element={<Videocall />} />
+    <Route
+      path="/videocall/:patientId/:appointmentId"
+      element={<Videocall />}
+    />
     <Route path="*" element={<NotFoundPage />} />
   </Routes>
 )
