@@ -40,6 +40,7 @@ export const NewAppointment = () => {
   const [current, setCurrent] = useState(0)
   const [medics, setMedics] = useState<string[]>()
   const [patients, setPatients] = useState<Patient[]>()
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     getPatients().then(setPatients)
@@ -66,6 +67,7 @@ export const NewAppointment = () => {
   }
 
   const submit = () => {
+    setIsLoading(true)
     const patientId = idForm.getFieldsValue().patient
     const values = detailsForm.getFieldsValue()
     const appointment = {
@@ -75,7 +77,6 @@ export const NewAppointment = () => {
       time: values.time.format("HH:mm"),
       providerId: values.medic
     }
-
     addAppointment(patientId, appointment)
       .then(() => {
         navigate(toAppointments())
@@ -85,6 +86,7 @@ export const NewAppointment = () => {
         errorNotification("Error al crear el turno")
         console.error(e)
       })
+      .finally(() => setIsLoading(false))
   }
 
   const disabledDates = (current: Moment) => {
@@ -287,6 +289,7 @@ export const NewAppointment = () => {
             style={{ width: "150px" }}
             type="primary"
             onClick={submit}
+            loading={isLoading}
           >
             Finalizar
           </Button>
