@@ -5,6 +5,7 @@ import {
 } from "@ant-design/icons"
 import { Space, Typography, Divider, Button, Modal } from "antd"
 import { useState } from "react"
+import { setEMR } from "../EMR/Handler"
 import { EmrType } from "../EMR/model"
 
 import { Patient } from "../Patients/model"
@@ -37,13 +38,13 @@ export const RightPanel = ({
   collapsed,
   setCollapsed
 }: Props) => {
-  console.log(patientInfo)
-
   const [visible, setVisible] = useState(false)
   const onOk = (emr: EmrType) => {
     setVisible(false)
     const newPatientInfo = { ...patientInfo, emr }
-    setPatientInfo(newPatientInfo)
+    setEMR(patientInfo.id, emr).then(() => {
+      setPatientInfo(newPatientInfo)
+    })
   }
 
   const onCancel = () => {
