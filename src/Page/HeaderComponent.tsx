@@ -1,18 +1,20 @@
 import { useLocation, useNavigate } from "react-router-dom"
-import { Avatar, Layout, Menu, Dropdown } from "antd"
+import { Avatar, Layout, Menu, Dropdown, Button } from "antd"
 import {
   DesktopOutlined,
   PieChartOutlined,
-  UserOutlined
+  UserOutlined,
+  MenuOutlined
 } from "@ant-design/icons"
 import { signOut } from "../firebase/auth"
 import { toAppointments } from "../Appointments/routes"
 import { toPatients } from "../Patients/routes"
 import { toQueue } from "../Queue/routes"
+import useMediaQuery from "../UI/useMediaQuery"
 
 const { Header } = Layout
 
-export const HeaderComponent = () => {
+const HeaderDesktop = () => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
@@ -55,7 +57,7 @@ export const HeaderComponent = () => {
         <Menu
           className="center"
           theme="dark"
-          style={{ width: "500px" }}
+          style={{ display: "flex", justifyContent: "center", width: "100%" }}
           mode="horizontal"
           defaultSelectedKeys={["/"]}
           selectedKeys={[`/${pathname.split("/")[1]}`]}
@@ -72,6 +74,35 @@ export const HeaderComponent = () => {
       </div>
     </Header>
   )
+}
+
+const HeaderMobile = () => {
+  const navigate = useNavigate()
+
+  return (
+    <Header>
+      <div className="header--mobile">
+        <Button size="large" type="text">
+          <MenuOutlined style={{ fontSize: "1.75em", color: "white" }} />
+        </Button>
+        <img
+          className="left"
+          src="/img/sos-logo.png"
+          alt="Salud Online Solidaria"
+          onClick={() => navigate("/")}
+        />
+        <div className="right">
+          <UserDropdown />
+        </div>
+      </div>
+    </Header>
+  )
+}
+
+export const HeaderComponent = () => {
+  const isDesktop = useMediaQuery("(min-width: 900px)")
+
+  return isDesktop ? <HeaderDesktop /> : <HeaderMobile />
 }
 
 const options = [
