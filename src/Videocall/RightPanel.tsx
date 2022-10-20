@@ -1,12 +1,16 @@
-import { LeftOutlined, RightOutlined } from "@ant-design/icons"
-import { Space, Typography, Divider, List, Modal } from "antd"
-
+import {
+  LeftOutlined,
+  RightOutlined,
+  FileTextOutlined
+} from "@ant-design/icons"
+import { Space, Typography, Divider, Button, Modal } from "antd"
 import { useState } from "react"
-import { EmrContent } from "../EMR/model"
+import { EmrType } from "../EMR/model"
 
 import { Patient } from "../Patients/model"
+import { RichTextEditor } from "../UI/RichTextEditor"
 
-const { Title, Text, Link, Paragraph } = Typography
+const { Title, Text, Link } = Typography
 
 const getAge = (dob: string) => {
   const splittedDate = dob.split("/")
@@ -25,18 +29,27 @@ type Props = {
   patientInfo: Patient
   collapsed: boolean
   setCollapsed: (val: boolean) => void
+  setPatientInfo: (patient: Patient) => void
 }
-export const RightPanel = ({ patientInfo, collapsed, setCollapsed }: Props) => {
+export const RightPanel = ({
+  patientInfo,
+  setPatientInfo,
+  collapsed,
+  setCollapsed
+}: Props) => {
   console.log(patientInfo)
-  const [selectedEmr, setSelectedEmr] = useState<EmrContent>()
 
-  const onOk = () => {
-    setSelectedEmr(undefined)
+  const [visible, setVisible] = useState(false)
+  const onOk = (emr: EmrType) => {
+    setVisible(false)
+    const newPatientInfo = { ...patientInfo, emr }
+    setPatientInfo(newPatientInfo)
   }
 
   const onCancel = () => {
-    setSelectedEmr(undefined)
+    setVisible(false)
   }
+
   return (
     <>
       <div className="right-panel">
@@ -69,30 +82,27 @@ export const RightPanel = ({ patientInfo, collapsed, setCollapsed }: Props) => {
             </Space>
             <Divider />
             <div>
-              <List
-                header={<div>Historia Clinica</div>}
-                bordered
-                dataSource={patientInfo.emr}
-                itemLayout="vertical"
-                renderItem={(emr) => (
-                  <List.Item
-                    onClick={() => {
-                      setSelectedEmr(emr)
-                    }}
-                  >
-                    <Link strong>{emr.date}</Link>
-                  </List.Item>
-                )}
-              />
+              {patientInfo.emr ? (
+                <Button
+                  type="link"
+                  size="large"
+                  onClick={() => {
+                    setVisible(true)
+                  }}
+                >
+                  <Link strong>Historia Clinica</Link>
+                  <FileTextOutlined style={{ marginLeft: ".5em" }} />
+                </Button>
+              ) : (
+                <Text>No hay historia clinica</Text>
+              )}
             </div>
           </div>
         )}
       </div>
       <EmrModal
-        patient={patientInfo}
-        visible={!!selectedEmr}
-        data={selectedEmr}
-        edit={false}
+        visible={visible}
+        data={patientInfo.emr}
         onOk={onOk}
         onCancel={onCancel}
       />
@@ -101,22 +111,19 @@ export const RightPanel = ({ patientInfo, collapsed, setCollapsed }: Props) => {
 }
 
 type ModalProps = {
-  patient: Patient
-  edit: boolean
   visible: boolean
-  data?: EmrContent
-  onOk: () => void
+  data?: EmrType
+  onOk: (emr: string) => void
   onCancel: () => void
 }
-const EmrModal = ({ edit, visible, data, onOk, onCancel }: ModalProps) => {
-  console.log({ myData: data })
+const EmrModal = ({ visible, data, onOk, onCancel }: ModalProps) => {
+  const [value, setValue] = useState(data ? data : "")
 
   const ModalTitle = () => (
     <div style={{ display: "flex", justifyContent: "space-between" }}>
       <Title level={4} style={{ margin: 0 }}>
-        {data?.date}
+        Historia Clinica
       </Title>
-      {/* <span style={{ paddingRight: "3em" }}>boton</span> */}
     </div>
   )
 
@@ -124,10 +131,13 @@ const EmrModal = ({ edit, visible, data, onOk, onCancel }: ModalProps) => {
     <Modal
       title={<ModalTitle />}
       visible={visible}
-      onOk={onOk}
+      onOk={() => {
+        onOk(value)
+      }}
       onCancel={onCancel}
+      width="50%"
     >
-      <Paragraph>{data?.text}</Paragraph>
+      <RichTextEditor value={value} onChange={setValue} />
     </Modal>
   )
 }

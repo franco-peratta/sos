@@ -13,7 +13,7 @@ export const Videocall = () => {
   const { patientId, appointmentId } = useParams()
   const [loading, setloading] = useState(true)
   const [error, setError] = useState()
-  const [data, setData] = useState()
+  const [patient, setPatient] = useState()
   const [collapsed, setCollapsed] = useState(false)
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export const Videocall = () => {
   useEffect(() => {
     checkPatientIdAndAppId(patientId, appointmentId)
       .then((res) => {
-        setData(res)
+        setPatient(res)
       })
       .catch((error) => {
         console.log({ error })
@@ -39,15 +39,15 @@ export const Videocall = () => {
 
   const handleMeetingEnd = () => {
     infoNotification("Videollamada finaliza")
-    changeAppointmentStatusById(data.id, data.appointment.id, "terminado")
+    changeAppointmentStatusById(patient.id, patient.appointment.id, "terminado")
     navigate("/")
   }
   // displayName no estaria funcionando
   // password funciona para el paciente SOLO si el medico se metio antes
   const { roomName, displayName, password } = {
     roomName: appointmentId,
-    displayName: `Turno con ${data.name}`,
-    password: data.dni
+    displayName: `Turno con ${patient.name}`,
+    password: patient.dni
   }
 
   return (
@@ -67,7 +67,8 @@ export const Videocall = () => {
         errorComponent={<p>Oops, something went wrong...</p>}
       />
       <RightPanel
-        patientInfo={data}
+        patientInfo={patient}
+        setPatientInfo={setPatient}
         collapsed={collapsed}
         setCollapsed={setCollapsed}
       />

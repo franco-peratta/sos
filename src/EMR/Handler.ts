@@ -1,7 +1,7 @@
 import { doc, getDoc, setDoc } from "firebase/firestore"
 import { db } from "../firebase/firestore"
 import { Patient } from "../Patients/model"
-import { EmrContent, EmrType } from "./model"
+import { EmrType } from "./model"
 
 export const getEMR = async (id: string) => {
   const snap = await getDoc(doc(db, "patients", id))
@@ -10,30 +10,11 @@ export const getEMR = async (id: string) => {
   return patient.emr
 }
 
-export const addEMR = async (
-  id: string,
-  oldEmrs: EmrType | undefined,
-  newEmr: EmrContent
-) => {
-  const patientRef = doc(db, "patients", id)
+export const setEMR = async (patientId: string, newEmr: EmrType) => {
+  const patientRef = await getDoc(doc(db, "patients", patientId))
 
-  let newEMRList: EmrType
+  const patient = { id: patientId, ...patientRef.data(), emr: newEmr }
+  await setDoc(doc(db, "patients", patientId), patient)
 
-  // Calculate new EMR object
-  if (oldEmrs) {
-    newEMRList = oldEmrs
-    const index = oldEmrs.findIndex((e) => e.date === newEmr.date)
-    if (index > -1) {
-      let text = `${newEMRList[index].text}\n${newEmr.text}`
-      newEMRList[index].text = text
-    } else {
-      newEMRList = [...oldEmrs, newEmr]
-    }
-  } else {
-    newEMRList = [newEmr]
-  }
-
-  await setDoc(patientRef, { emr: newEMRList }, { merge: true })
-
-  return newEMRList
+  return newEmr
 }
