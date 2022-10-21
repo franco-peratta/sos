@@ -1,21 +1,58 @@
-import { Button, Form, Input, Layout, Typography, Image } from "antd"
+import { Button, Form, Input, Layout, Image, Typography } from "antd"
 import { useState } from "react"
-import { signIn } from "../firebase/auth"
+import { register, signIn } from "../firebase/auth"
+import { errorNotification } from "../Notification"
+import { addProvider } from "./Handler"
 
-const { Text } = Typography
+const { Text, Link } = Typography
 
+const emailRegex =
+  /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+
+type FormT = {
+  email: string
+  password: string
+  password2: string
+}
 export const LoginPage = () => {
-  const [error, setError] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [form] = Form.useForm<FormT>()
+
+  const [mode, setMode] = useState<"login" | "register">("login")
+  const [loading, setLoading] = useState(false)
 
   const onFinish = () => {
-    signIn(email, password)
-      .then((user) => {
-        console.log({ user })
+    setLoading(true)
+    form
+      .validateFields()
+      .then(({ email, password, password2 }) => {
+        if (mode === "login") {
+          signIn(email, password)
+            .catch((err) => {
+              errorNotification("Datos invalidos")
+            })
+            .finally(() => setLoading(false))
+        } else {
+          console.log({ email, password, password2 })
+          if (password !== password2) {
+            errorNotification("Las contraseñas no coinciden")
+            return
+          }
+          register(email, password)
+            .then(({ user }) => {
+              console.log(user.uid)
+              console.log(user.email)
+              addProvider(user)
+            })
+            .catch((err) => {
+              errorNotification("Hubo un problema al registrarse")
+            })
+            .finally(() => setLoading(false))
+        }
       })
-      .catch(() => {
-        setError(true)
+      .catch((err) => {
+        setLoading(false)
+        console.log("error")
+        console.error(err)
       })
   }
 
@@ -48,8 +85,9 @@ export const LoginPage = () => {
           alt="Salud Online Solidaria"
           preview={false}
         />
-        {error && <Text type="danger">Credenciales Invalidas</Text>}
+
         <Form
+          form={form}
           style={{ width: "max(25vw, 300px)" }}
           layout="vertical"
           name="basic"
@@ -61,9 +99,15 @@ export const LoginPage = () => {
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: "Por favor ingrese su email!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Ingrese un email valido",
+                pattern: emailRegex
+              }
+            ]}
           >
-            <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input />
           </Form.Item>
 
           <Form.Item
@@ -73,16 +117,46 @@ export const LoginPage = () => {
               { required: true, message: "Por favor ingrese su contraseña" }
             ]}
           >
-            <Input.Password
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <Input.Password />
           </Form.Item>
 
+          {mode === "register" && (
+            <Form.Item
+              label="Repita su Contraseña"
+              name="password2"
+              rules={[
+                { required: true, message: "Por favor ingrese su contraseña" }
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+          )}
+
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Iniciar Sesion
+            <Button
+              type="primary"
+              shape="round"
+              htmlType="submit"
+              loading={loading}
+              style={{ marginTop: "1em", height: "3em", width: "100%" }}
+            >
+              {mode === "login" ? "Iniciar Sesion" : "Registrarse"}
             </Button>
+            <br />
+            <br />
+            {mode === "login" && (
+              <>
+                <Text>No eres miembro? </Text>
+                <Link onClick={() => setMode("register")}>Registrese</Link>
+              </>
+            )}
+            {mode === "register" && (
+              <>
+                <Link onClick={() => setMode("login")}>
+                  Volver a Iniciar Sesion
+                </Link>
+              </>
+            )}
           </Form.Item>
         </Form>
       </div>

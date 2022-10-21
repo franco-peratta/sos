@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
+import { useState, useEffect } from "react"
+import PropTypes from "prop-types"
 
 const Jitsi = ({
   loadingComponent,
@@ -11,9 +11,9 @@ const Jitsi = ({
   displayName,
   ...options
 }) => {
-  const {loading, error, jitsi} = useJitsi({
-    parentNode: 'jitsi-container',
-    displayName:displayName,
+  const { loading, error, jitsi } = useJitsi({
+    parentNode: "jitsi-container",
+    displayName: displayName,
     ...options
   })
 
@@ -26,17 +26,19 @@ const Jitsi = ({
   }, [error])
 
   return (
-    <div style={{ ...{ width: '800px', height: '400px' }, ...containerStyles }}>
+    <div style={{ ...{ width: "800px", height: "400px" }, ...containerStyles }}>
       {error && (errorComponent || <p>{error}</p>)}
       {!error && loading && (loadingComponent || <p>Loading ...</p>)}
       <div
-        id='jitsi-container'
-        style={{ ...{
-          display: loading ? 'none' : 'block',
-          width: '100%',
-          height: '100%'
-        },
-        ...jitsiContainerStyles }}
+        id="jitsi-container"
+        style={{
+          ...{
+            display: loading ? "none" : "block",
+            width: "100%",
+            height: "100%"
+          },
+          ...jitsiContainerStyles
+        }}
       />
     </div>
   )
@@ -61,7 +63,7 @@ Jitsi.propTypes = {
 }
 
 const useJitsi = ({
-  domain = 'meet.jit.si',
+  domain = "meet.jit.si",
   parentNode,
   subject,
   password,
@@ -75,46 +77,50 @@ const useJitsi = ({
 
   useEffect(() => {
     if (!window.JitsiMeetExternalAPI) {
-      setError('JitsiMeetExternalAPI is not available, check if https://meet.jit.si/external_api.js was loaded')
+      setError(
+        "JitsiMeetExternalAPI is not available, check if https://meet.jit.si/external_api.js was loaded"
+      )
       return
     }
 
     options.parentNode = document.getElementById(parentNode)
     if (!options.parentNode) {
-      setError(`Parent node is not available, check container have the correct id: "${parentNode}"`)
+      setError(
+        `Parent node is not available, check container have the correct id: "${parentNode}"`
+      )
       return
     }
 
-    const client = new window.JitsiMeetExternalAPI(domain, {...options})
-    
+    const client = new window.JitsiMeetExternalAPI(domain, { ...options })
+
     setJitsi(client)
     setLoading(false)
     setError(null)
-    
-    subject && client.executeCommand('subject', subject)
-    // client.executeCommand('displayName', displayName ?? "Anonymus")
 
-    client.addEventListener('videoConferenceJoined', () => {
+    subject && client.executeCommand("subject", subject)
+    // client.executeCommand("displayName", displayName ?? "Anonimo")
+
+    client.addEventListener("videoConferenceJoined", () => {
       console.log("Joined the meeting")
-      //displayName && client.executeCommand('displayName', displayName)
+      displayName && client.executeCommand("displayName", displayName)
     })
 
-    client.addEventListener('participantRoleChanged', function (event) {
-      if (password && event.role === 'moderator') {
-        client.executeCommand('password', password)
+    client.addEventListener("participantRoleChanged", function (event) {
+      if (password && event.role === "moderator") {
+        client.executeCommand("password", password)
       }
     })
 
-    client.addEventListener('passwordRequired', () => {
-      password && client.executeCommand('password', password)
+    client.addEventListener("passwordRequired", () => {
+      password && client.executeCommand("password", password)
     })
-    
-    client.addEventListener('readyToClose', onMeetingEnd)
+
+    client.addEventListener("readyToClose", onMeetingEnd)
 
     return () => jitsi && jitsi.dispose()
   }, [window.JitsiMeetExternalAPI])
 
-  return {jitsi, error, loading}
+  return { jitsi, error, loading }
 }
 
 useJitsi.propTypes = {
@@ -138,6 +144,5 @@ useJitsi.propTypes = {
     userInfo: PropTypes.object
   })
 }
-
 
 export { Jitsi, useJitsi }

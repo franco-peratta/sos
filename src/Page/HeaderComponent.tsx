@@ -6,7 +6,7 @@ import {
   UserOutlined,
   MenuOutlined
 } from "@ant-design/icons"
-import { signOut } from "../firebase/auth"
+import { signOut, useAuth } from "../firebase/auth"
 import { toAppointments } from "../Appointments/routes"
 import { toPatients } from "../Patients/routes"
 import { toQueue } from "../Queue/routes"
@@ -105,15 +105,25 @@ export const HeaderComponent = () => {
   return isDesktop ? <HeaderDesktop /> : <HeaderMobile />
 }
 
-const options = [
-  {
-    label: "Cerrar Sesion",
-    key: "signOut",
-    onClick: signOut,
-    icon: <></>
-  }
-]
 const UserDropdown = () => {
+  const navigate = useNavigate()
+  const [user] = useAuth()
+
+  const options = [
+    {
+      label: "Configuracion",
+      key: "setting",
+      onClick: () => navigate(`/perfil/${user?.uid}`),
+      icon: <></>
+    },
+    {
+      label: "Cerrar Sesion",
+      key: "signOut",
+      onClick: signOut,
+      icon: <></>
+    }
+  ]
+
   const menu = (
     <Menu
       onClick={console.log}
