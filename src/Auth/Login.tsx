@@ -1,5 +1,6 @@
 import { Button, Form, Input, Layout, Image, Typography } from "antd"
 import { useState } from "react"
+// import { useNavigate } from "react-router"
 import { register, signIn } from "../firebase/auth"
 import { errorNotification } from "../Notification"
 import { addProvider } from "./Handler"
@@ -7,6 +8,7 @@ import { addProvider } from "./Handler"
 const { Text, Link } = Typography
 
 const emailRegex =
+  // eslint-disable-next-line no-control-regex
   /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 
 type FormT = {
@@ -16,6 +18,7 @@ type FormT = {
 }
 export const LoginPage = () => {
   const [form] = Form.useForm<FormT>()
+  // const navigate = useNavigate()
 
   const [mode, setMode] = useState<"login" | "register">("login")
   const [loading, setLoading] = useState(false)
@@ -32,19 +35,23 @@ export const LoginPage = () => {
             })
             .finally(() => setLoading(false))
         } else {
-          console.log({ email, password, password2 })
           if (password !== password2) {
             errorNotification("Las contraseñas no coinciden")
+            setLoading(false)
             return
           }
           register(email, password)
             .then(({ user }) => {
               console.log(user.uid)
               console.log(user.email)
-              addProvider(user)
+              addProvider(user).then(() => {
+                // navigate(`/perfil/${user.uid}`)
+              })
             })
             .catch((err) => {
-              errorNotification("Hubo un problema al registrarse")
+              if (err.code === "auth/email-already-in-use")
+                errorNotification("El mail ya esta en uso")
+              else errorNotification("Hubo un problema al registrarse")
             })
             .finally(() => setLoading(false))
         }

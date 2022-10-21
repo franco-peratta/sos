@@ -111,8 +111,8 @@ const UserDropdown = () => {
 
   const options = [
     {
-      label: "Configuracion",
-      key: "setting",
+      label: "Perfil",
+      key: "profile",
       onClick: () => navigate(`/perfil/${user?.uid}`),
       icon: <></>
     },
