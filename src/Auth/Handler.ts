@@ -24,13 +24,13 @@ const defaultShift = {
     shifts: [{ from: 8, to: 12 }]
   }
 }
-export const addProvider = async (user: User) => {
+export const addProvider = async (user: User, name: string) => {
   const snap = await getDoc(doc(db, "providers", user.uid))
   if (snap.exists()) throw new Error()
 
   return setDoc(doc(db, "providers", user.uid), {
     email: user.email,
-    name: user.displayName,
+    name,
     phoneNumber: user.phoneNumber,
     providerId: user.providerId,
     providerData: user.providerData,
