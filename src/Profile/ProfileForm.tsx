@@ -26,7 +26,7 @@ export const ProfileForm = ({ user }: Props) => {
         <Form.Item name="email" label="Email" required>
           <Input placeholder="Email" />
         </Form.Item>
-        <Form.Item name="phoneNumber" label="Numero de telefono" required>
+        <Form.Item name="phoneNumber" label="Numero de telefono">
           <Input placeholder="+54 (011) 5555555" />
         </Form.Item>
       </Form>

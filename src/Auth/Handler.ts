@@ -34,6 +34,6 @@ export const addProvider = async (user: User) => {
     phoneNumber: user.phoneNumber,
     providerId: user.providerId,
     providerData: user.providerData,
-    shift: defaultShift
+    shifts: defaultShift
   })
 }

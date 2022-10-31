@@ -1,33 +1,29 @@
-type Shift = {
-  0: boolean
-  1: boolean
-  2: boolean
-  3: boolean
-  4: boolean
-  5: boolean
-  6: boolean
-  7: boolean
-  8: boolean
-  9: boolean
-  10: boolean
-  11: boolean
-  12: boolean
-  13: boolean
-  14: boolean
-  15: boolean
-  16: boolean
-  17: boolean
-  18: boolean
-  19: boolean
-  20: boolean
-  21: boolean
-  22: boolean
-  23: boolean
+export type Shifts = {
+  monday: {
+    available: boolean
+    shifts: { from: number; to: number }[]
+  }
+  tuesday: {
+    available: boolean
+    shifts: { from: number; to: number }[]
+  }
+  wednesday: {
+    available: boolean
+    shifts: { from: number; to: number }[]
+  }
+  thursday: {
+    available: boolean
+    shifts: { from: number; to: number }[]
+  }
+  friday: {
+    available: boolean
+    shifts: { from: number; to: number }[]
+  }
 }
 
 export type User = {
   email: string
-  shift: Shift
+  shifts: Shifts
   name: string
   phoneNumber: string
   providerId: string

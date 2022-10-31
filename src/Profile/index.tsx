@@ -1,10 +1,10 @@
+import { Button } from "antd"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { User } from "../Auth/Model"
 import { Bubble } from "../components/Bubble"
 import { Loader } from "../components/Loader"
 import { NotFoundPage } from "../components/NotFoundPage"
-import { errorNotification } from "../Notification"
 import { getUserProfileById } from "./Handler"
 import { HoursOfOperations } from "./HoursOfOperations"
 import { ProfileForm } from "./ProfileForm"
@@ -31,7 +31,8 @@ export const Profile = () => {
   return (
     <Bubble>
       <ProfileForm user={user} />
-      <HoursOfOperations user={user} />
+      <HoursOfOperations user={user} setUser={setUser} />
+      <Button type="primary">Guardar</Button>
     </Bubble>
   )
 }
