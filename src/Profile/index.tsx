@@ -28,11 +28,22 @@ export const Profile = () => {
   if (loading || !user) return <Loader />
   if (error) return <NotFoundPage />
 
+  const handleSave = () => {
+    console.log(user)
+  }
+
   return (
     <Bubble>
       <ProfileForm user={user} />
       <HoursOfOperations user={user} setUser={setUser} />
-      <Button type="primary">Guardar</Button>
+
+      <Button
+        style={{ display: "block", marginLeft: "auto", marginRight: "0" }}
+        type="primary"
+        onClick={handleSave}
+      >
+        Guardar
+      </Button>
     </Bubble>
   )
 }

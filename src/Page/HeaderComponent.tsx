@@ -126,7 +126,6 @@ const UserDropdown = () => {
 
   const menu = (
     <Menu
-      onClick={console.log}
       items={options.map(({ key, label, onClick, icon }) => ({
         key: key,
         label: label,
