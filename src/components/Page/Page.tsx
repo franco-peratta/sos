@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 import { Layout } from "antd"
 import { HeaderComponent } from "./HeaderComponent"
 import "./styles.less"
-import "../UI/global_styles.less"
+import "../../UI/global_styles.less"
 
 type Props = {
   children: ReactNode

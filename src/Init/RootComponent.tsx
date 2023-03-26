@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom"
 import { Alert } from "antd"
-import { Page } from "../Page"
+import { Page } from "../components/Page"
 import { LoginPage } from "../Auth"
 import { useAuth } from "../firebase/auth"
 import { LoaderPage } from "../components/Loader"

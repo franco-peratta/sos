@@ -1,16 +1,16 @@
 import { useLocation, useNavigate } from "react-router-dom"
-import { Avatar, Layout, Menu, Dropdown, Button } from "antd"
+import { Avatar, Layout, Menu, Dropdown, Button, Drawer } from "antd"
 import {
   DesktopOutlined,
   PieChartOutlined,
   UserOutlined,
   MenuOutlined
 } from "@ant-design/icons"
-import { signOut, useAuth } from "../firebase/auth"
-import { toAppointments } from "../Appointments/routes"
-import { toPatients } from "../Patients/routes"
-import { toQueue } from "../Queue/routes"
-import useMediaQuery from "../UI/useMediaQuery"
+import { signOut, useAuth } from "../../firebase/auth"
+import { toAppointments } from "../../Appointments/routes"
+import { toPatients } from "../../Patients/routes"
+import useMediaQuery from "../../UI/useMediaQuery"
+import { useState } from "react"
 
 const { Header } = Layout
 
@@ -19,14 +19,6 @@ const HeaderDesktop = () => {
   const { pathname } = useLocation()
 
   const items = [
-    {
-      label: "Agenda",
-      key: "/",
-      icon: <PieChartOutlined />,
-      onClick: () => {
-        navigate(toQueue())
-      }
-    },
     {
       label: "Pacientes",
       key: "/pacientes",
@@ -78,11 +70,16 @@ const HeaderDesktop = () => {
 
 const HeaderMobile = () => {
   const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
+
+  const handleDrawer = () => {
+    setOpen(!open)
+  }
 
   return (
     <Header>
       <div className="header--mobile">
-        <Button size="large" type="text">
+        <Button size="large" type="text" onClick={handleDrawer}>
           <MenuOutlined style={{ fontSize: "1.75em", color: "white" }} />
         </Button>
         <img
@@ -95,14 +92,20 @@ const HeaderMobile = () => {
           <UserDropdown />
         </div>
       </div>
+      <Drawer
+        title="Basic Drawer"
+        key="drawer"
+        placement="left"
+        closable={true}
+        onClose={() => setOpen(!open)}
+        open={open}
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
     </Header>
   )
-}
-
-export const HeaderComponent = () => {
-  const isDesktop = useMediaQuery("(min-width: 900px)")
-
-  return isDesktop ? <HeaderDesktop /> : <HeaderMobile />
 }
 
 const UserDropdown = () => {
@@ -140,4 +143,10 @@ const UserDropdown = () => {
       <Avatar style={{ cursor: "pointer" }} size={52} icon={<UserOutlined />} />
     </Dropdown>
   )
+}
+
+export const HeaderComponent = () => {
+  const isDesktop = useMediaQuery("(min-width: 900px)")
+
+  return isDesktop ? <HeaderDesktop /> : <HeaderMobile />
 }
