@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom"
-import { Avatar, Layout, Menu, Dropdown, Button, Drawer } from "antd"
+import { Avatar, Layout, Menu, Dropdown, Button, Drawer, MenuProps } from "antd"
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -127,19 +127,17 @@ const UserDropdown = () => {
     }
   ]
 
-  const menu = (
-    <Menu
-      items={options.map(({ key, label, onClick, icon }) => ({
-        key: key,
-        label: label,
-        onClick: onClick,
-        icon: icon
-      }))}
-    />
+  const items: MenuProps["items"] = options.map(
+    ({ key, label, onClick, icon }) => ({
+      key: key,
+      label: label,
+      onClick: onClick,
+      icon: icon
+    })
   )
 
   return (
-    <Dropdown overlay={menu} trigger={["click"]}>
+    <Dropdown menu={{ items }} trigger={["click"]}>
       <Avatar style={{ cursor: "pointer" }} size={52} icon={<UserOutlined />} />
     </Dropdown>
   )

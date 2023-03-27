@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { Button, Input, Space, Table, Typography } from "antd"
 import { EditOutlined, PlusOutlined } from "@ant-design/icons"
 import { Bubble } from "../components/Bubble"
@@ -14,8 +14,8 @@ const { Title, Link } = Typography
 
 export const Patients = () => {
   const [loading, setLoading] = useState(true)
-  const [data, setData] = useState<Patient[]>([])
-  const [filteredData, setFilteredData] = useState<Patient[]>([])
+  const [data, setData] = useState<Patient[] | undefined>(undefined)
+  const [filter, setFilter] = useState("")
   const [columns, setColumns] = useState<
     {
       key: string
@@ -28,9 +28,8 @@ export const Patients = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    getPatients().then((patients) => {
-      setData(patients)
-      setFilteredData(patients)
+    getPatients().then((data) => {
+      setData(data)
       setLoading(false)
     })
   }, [])
@@ -83,19 +82,10 @@ export const Patients = () => {
     setColumns(columnsSchema)
   }, [navigate])
 
-  const onSearch = useCallback(
-    (value: string) => {
-      if (!value) setFilteredData(data)
-
-      const newData: typeof data = data?.filter(
-        ({ name, dni }: { name: string; dni: string }) =>
-          name.toLowerCase().includes(value.toLowerCase()) ||
-          dni.includes(value)
-      )
-      setFilteredData(newData)
-    },
-    [data]
+  const filteredData = data?.filter((item) =>
+    item.name.toLowerCase().includes(filter.toLowerCase())
   )
+  console.log("filteredData", filteredData)
 
   return (
     <Bubble>
@@ -120,12 +110,12 @@ export const Patients = () => {
           size="large"
           placeholder="Buscar"
           allowClear
-          onSearch={onSearch}
+          onSearch={setFilter}
         />
 
         <Table
-          key="table"
-          rowKey="c4c400e0-2d2e-11ed-a261-0242ac120002"
+          key="patients-table"
+          rowKey={(row) => row.id}
           dataSource={filteredData}
           columns={columns}
           loading={loading}

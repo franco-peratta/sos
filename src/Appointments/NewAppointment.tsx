@@ -23,7 +23,7 @@ import { APPOINTMENT_STATUS } from "./Model"
 import { v4 as uuidv4 } from "uuid"
 import { errorNotification, successNotification } from "../Notification"
 
-import "./styles.less"
+import "./styles.css"
 
 const { Option } = Select
 const { Title } = Typography
@@ -67,26 +67,26 @@ export const NewAppointment = () => {
   }
 
   const submit = () => {
-    setIsLoading(true)
-    const patientId = idForm.getFieldsValue().patient
-    const values = detailsForm.getFieldsValue()
-    const appointment = {
-      id: uuidv4(),
-      status: APPOINTMENT_STATUS.pendiente,
-      date: values.date.format("DD/MM/YYYY"),
-      time: values.time.format("HH:mm"),
-      providerId: values.medic
-    }
-    addAppointment(patientId, appointment)
-      .then(() => {
-        navigate(toAppointments())
-        successNotification("Turno creado correctamente")
-      })
-      .catch((e) => {
-        errorNotification("Error al crear el turno")
-        console.error(e)
-      })
-      .finally(() => setIsLoading(false))
+    // setIsLoading(true)
+    // const patientId = idForm.getFieldsValue().patient
+    // const values = detailsForm.getFieldsValue()
+    // const appointment = {
+    //   id: uuidv4(),
+    //   status: APPOINTMENT_STATUS.pendiente,
+    //   date: values.date.format("DD/MM/YYYY"),
+    //   time: values.time.format("HH:mm"),
+    //   providerId: values.medic
+    // }
+    // addAppointment(patientId, appointment)
+    //   .then(() => {
+    //     navigate(toAppointments())
+    //     successNotification("Turno creado correctamente")
+    //   })
+    //   .catch((e) => {
+    //     errorNotification("Error al crear el turno")
+    //     console.error(e)
+    //   })
+    //   .finally(() => setIsLoading(false))
   }
 
   const disabledDates = (current: Moment) => {

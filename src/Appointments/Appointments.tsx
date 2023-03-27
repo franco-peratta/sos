@@ -15,7 +15,7 @@ import { toCreateAppointment } from "./routes"
 import { Bubble } from "../components/Bubble"
 import { AppointmentWithPatientInfo, statusColorMapping } from "./Model"
 import {
-  changeAppointmentStatus,
+  changeAppointmentStatusById,
   deleteAppointment,
   getAppointments
 } from "./Handler"
@@ -103,7 +103,7 @@ export const Appointments = () => {
                     title={"Está seguro que desea realizar esta llamada?"}
                     onConfirm={() => {
                       infoNotification("Creando llamada")
-                      changeAppointmentStatus(app, "en progreso")
+                      changeAppointmentStatusById(app.id, "en progreso")
                         .then(() =>
                           navigate(`/videocall/${app.patientId}/${app.id}`)
                         )

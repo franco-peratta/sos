@@ -6,21 +6,20 @@ import {
   DeleteOutlined,
   PhoneOutlined
 } from "@ant-design/icons"
-import { Patient } from "./model"
+import { PatientWithAppointment } from "./model"
 import { Card, Popconfirm, Tabs, Tag, Typography } from "antd"
 import { Bubble } from "../components/Bubble"
 import { Loader } from "../components/Loader"
 import { EMR } from "../EMR"
-import { getPatientById } from "./Handler"
+import { getPatientByIdWithAppointments } from "./Handler"
 import { toPatients } from "./routes"
 import { errorNotification, successNotification } from "../Notification"
-
-import "./styles.less"
 import {
   AppointmentWithPatientInfo,
   statusColorMapping
 } from "../Appointments/Model"
 import { deleteAppointment } from "../Appointments/Handler"
+import "./styles.less"
 
 const { Title, Text } = Typography
 const { TabPane } = Tabs
@@ -29,14 +28,14 @@ const { Meta } = Card
 export const PatientDetails = () => {
   const { id } = useParams()
 
-  const [patient, setPatient] = useState<Patient>()
+  const [patient, setPatient] = useState<PatientWithAppointment>()
   const [loading, setIsLoading] = useState(true)
 
   const navigate = useNavigate()
 
   useEffect(() => {
     if (id)
-      getPatientById(id)
+      getPatientByIdWithAppointments(id)
         .then((res) => {
           if (!res) {
             return
@@ -80,7 +79,7 @@ export const PatientDetails = () => {
   )
 }
 
-const Details = ({ patient }: { patient: Patient }) => {
+const Details = ({ patient }: { patient: PatientWithAppointment }) => {
   const navigate = useNavigate()
 
   const deleteHandler = async (appointment: AppointmentWithPatientInfo) => {
@@ -95,6 +94,8 @@ const Details = ({ patient }: { patient: Patient }) => {
       })
   }
 
+  console.log(patient)
+
   return (
     <>
       <div className="flex--columns">
@@ -106,7 +107,7 @@ const Details = ({ patient }: { patient: Patient }) => {
       <div>
         <Title level={3}>Turnos</Title>
         <div className="row">
-          {patient.appointments?.map((app) => {
+          {patient.Appointment?.map((app) => {
             const Description = () => (
               <div>
                 <Tag
@@ -147,7 +148,7 @@ const Details = ({ patient }: { patient: Patient }) => {
               </Card>
             )
           })}
-          {!patient.appointments?.length ? (
+          {!patient.Appointment?.length ? (
             <Text>No hay turnos para este paciente</Text>
           ) : null}
         </div>

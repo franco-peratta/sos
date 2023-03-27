@@ -3,8 +3,8 @@ export type Appointment = {
   date: string
   time: string
   providerId: string
+  patientId: string
   status: AppointmentStatus
-  reasons?: string
 }
 
 export type AppointmentWithPatientInfo = Appointment & {
@@ -14,17 +14,16 @@ export type AppointmentWithPatientInfo = Appointment & {
   patientEmr?: []
 }
 
-// export type AppointmentStatus = "pendiente" | "en progreso" | "terminado"
 export const APPOINTMENT_STATUS = {
-  pendiente: "pendiente",
+  espera: "espera",
   "en progreso": "en progreso",
   terminado: "terminado"
 } as const
 export type AppointmentStatus =
-  typeof APPOINTMENT_STATUS[keyof typeof APPOINTMENT_STATUS]
+  (typeof APPOINTMENT_STATUS)[keyof typeof APPOINTMENT_STATUS]
 
 export const statusColorMapping = {
-  pendiente: "blue",
+  espera: "blue",
   "en progreso": "green",
   terminado: "red"
 }

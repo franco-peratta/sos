@@ -82,7 +82,7 @@ export const RightPanel = ({
               </Text>
             </Space>
             <Divider />
-            <div>
+            {/* <div>
               {patientInfo.emr ? (
                 <Button
                   type="link"
@@ -97,13 +97,13 @@ export const RightPanel = ({
               ) : (
                 <Text>No hay historia clinica</Text>
               )}
-            </div>
+            </div> */}
           </div>
         )}
       </div>
       <EmrModal
         visible={visible}
-        data={patientInfo.emr}
+        // data={patientInfo.emr}
         onOk={onOk}
         onCancel={onCancel}
       />

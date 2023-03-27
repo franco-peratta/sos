@@ -1,10 +1,8 @@
 import { Route, Routes, Navigate } from "react-router-dom"
 import { PatientDetails, Patients } from "../Patients"
 import { PatientForm } from "../Patients/PatientForm"
-import { Appointments, NewAppointment } from "../Appointments"
-import { NotFoundPage } from "./NotFoundPage"
-import { Videocall } from "../Videocall"
 import { Profile } from "../Profile"
+import { NotFoundPage } from "./NotFoundPage"
 
 export const authRoutes = (
   <Routes>
@@ -14,12 +12,12 @@ export const authRoutes = (
     <Route path="/pacientes/editar/:id" element={<PatientForm />} />
     <Route path="/pacientes/nuevo" element={<PatientForm />} />
     <Route path="/perfil/:id" element={<Profile />} />
-    <Route path="/turnos" element={<Appointments />} />
+    {/*<Route path="/turnos" element={<Appointments />} />
     <Route path="/turnos/nuevo" element={<NewAppointment />} />
     <Route
       path="/videocall/:patientId/:appointmentId"
       element={<Videocall />}
-    />
+    /> */}
     <Route path="*" element={<NotFoundPage />} />
   </Routes>
 )

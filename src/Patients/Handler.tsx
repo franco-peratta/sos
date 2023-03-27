@@ -1,23 +1,35 @@
-import { collection, getDocs, addDoc, doc, getDoc } from "firebase/firestore"
-import { db } from "../firebase/firestore"
+import { http } from "../http"
 import { Patient } from "./model"
 
 export const getPatients = async () => {
-  const querySnapshot = await getDocs(collection(db, "patients"))
-  const response: any[] = []
-  querySnapshot.forEach((doc) => {
-    response.push({ id: doc.id, ...doc.data() })
+  const res = await http("/patients", {
+    method: "GET"
   })
-
-  return response
+  const json = await res.json()
+  return json.data
 }
 
 export const getPatientById = async (id: string) => {
-  const snap = await getDoc(doc(db, "patients", id))
-  if (!snap.exists()) throw new Error("Paciente no encontrado")
-  return { id: snap.id, ...snap.data() } as Patient
+  const res = await http(`/patients/${id}`, {
+    method: "GET"
+  })
+  const json = await res.json()
+  return json.data
 }
 
-export const addPatient = (patient: Patient) => {
-  return addDoc(collection(db, "patients"), { ...patient, appointments: [] })
+export const getPatientByIdWithAppointments = async (id: string) => {
+  const res = await http(`/patients/${id}/appointments`, {
+    method: "GET"
+  })
+  const json = await res.json()
+  return json.data
+}
+
+export const addPatient = async (patient: Patient) => {
+  const res = await http("/patients", {
+    method: "POST",
+    body: JSON.stringify(patient)
+  })
+  const json = await res.json()
+  return json.data
 }

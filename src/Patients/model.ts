@@ -1,5 +1,4 @@
 import { Appointment } from "../Appointments/Model"
-import { EmrType } from "../EMR/model"
 
 export type Patient = {
   id: string
@@ -7,6 +6,13 @@ export type Patient = {
   dni: string
   dob: string
   email: string
-  emr?: EmrType
-  appointments?: Appointment[]
+}
+
+export type PatientWithAppointment = {
+  id: string
+  name: string
+  dni: string
+  dob: string
+  email: string
+  Appointment: Appointment[]
 }
