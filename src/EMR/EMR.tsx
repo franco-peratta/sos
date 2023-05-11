@@ -1,38 +1,31 @@
 import { Space, Button } from "antd"
-import { useEffect, useState } from "react"
-import { getEMR, setEMR } from "./Handler"
+import { useState } from "react"
 import { EmrType } from "./model"
-
+import { Patient } from "../Patients/model"
 import { RichTextEditor } from "../UI/RichTextEditor"
-import { successNotification } from "../Notification"
 
 type EmrProps = {
-  patientId: string
+  patient: Patient
+  updateEmr: (emr: EmrType) => void
 }
-export const EMR = ({ patientId }: EmrProps) => {
-  const [emr, setEmrState] = useState<EmrType>("")
-  const [loading, setLoading] = useState(false)
+export const EMR = ({ patient, updateEmr }: EmrProps) => {
+  const [emrValue, setEmrValue] = useState(patient.emr)
 
-  useEffect(() => {
-    getEMR(patientId).then((res) => {
-      setEmrState(res ? res : "")
-    })
-  }, [patientId])
+  const handleSave = () => {
+    updateEmr(emrValue)
+  }
 
-  const handleSave = async () => {
-    setLoading(true)
-    await setEMR(patientId, emr)
-    setLoading(false)
-    successNotification("Historia clinica actualizada")
+  const handleEmrChange = (newValue: string) => {
+    setEmrValue(newValue)
   }
 
   return (
     <>
       <Space size="large" direction="vertical">
         <div>
-          <RichTextEditor value={emr} onChange={setEmrState} />
+          <RichTextEditor value={emrValue} onChange={handleEmrChange} />
         </div>
-        <Button type="primary" onClick={handleSave} loading={loading}>
+        <Button type="primary" onClick={handleSave}>
           Guardar
         </Button>
       </Space>

@@ -1,23 +1,22 @@
 import { Route, Routes, Navigate, useLocation } from "react-router-dom"
-// import { PatientDetails, Patients } from "../Patients"
-// import { PatientForm } from "../Patients/PatientForm"
-// import { Profile } from "../Profile"
 import { NotFoundPage } from "./NotFoundPage"
 import { useAuth } from "../Auth/useAuth"
 import { LoginPage } from "../Auth"
+import { Patients } from "../Patients"
+import { PatientDetails } from "../Patients/PatientDetails"
 
 export const routes = (
   <Routes>
-    {/* <Route
+    <Route
       path="/"
       element={
         <RequireAuth>
           <Navigate to="/pacientes" />
         </RequireAuth>
       }
-    /> */}
+    />
     <Route path="/login" element={<LoginPage />} />
-    {/* <Route
+    <Route
       path="/pacientes"
       element={
         <RequireAuth>
@@ -33,7 +32,7 @@ export const routes = (
         </RequireAuth>
       }
     />
-    <Route
+    {/*<Route
       path="/pacientes/editar/:id"
       element={
         <RequireAuth>
