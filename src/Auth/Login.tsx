@@ -1,11 +1,9 @@
-import { Button, Form, Input, Layout, Image, Typography } from "antd"
+import { Button, Form, Input, Layout, Image } from "antd"
 import { useState } from "react"
-// import { useNavigate } from "react-router"
-import { register, signIn } from "../firebase/auth"
+import { useAuth } from "./useAuth"
+import { Navigate } from "react-router-dom"
+import { http } from "../http"
 import { errorNotification } from "../Notification"
-import { addProvider } from "./Handler"
-
-const { Text, Link } = Typography
 
 const emailRegex =
   // eslint-disable-next-line no-control-regex
@@ -15,56 +13,53 @@ type FormT = {
   name: string
   email: string
   password: string
-  password2: string
 }
+
+interface TLogin {
+  token: string
+  user: {
+    id: number
+    email: string
+  }
+}
+
 export const LoginPage = () => {
   const [form] = Form.useForm<FormT>()
-  // const navigate = useNavigate()
-
-  const [mode, setMode] = useState<"login" | "register">("login")
   const [loading, setLoading] = useState(false)
+
+  const { user, signin } = useAuth()
+
+  if (user) {
+    return <Navigate to="/" replace />
+  }
 
   const onFinish = () => {
     setLoading(true)
     form
       .validateFields()
-      .then(({ email, password, password2 }) => {
-        if (mode === "login") {
-          signIn(email, password)
-            .catch((err) => {
-              errorNotification("Datos invalidos")
-            })
-            .finally(() => setLoading(false))
-        } else {
-          if (password !== password2) {
-            errorNotification("Las contraseñas no coinciden")
+      .then(({ email, password }) => {
+        http<TLogin>("POST", "/auth/login", {
+          params: { email, password, role: "provider" }
+        })
+          .then(({ data }) => {
+            signin(data.token, data.user)
+          })
+          .catch((err) => {
+            console.error({ err })
+            errorNotification("Datos invalidos")
+          })
+          .finally(() => {
             setLoading(false)
-            return
-          }
-          register(email, password)
-            .then(({ user }) => {
-              addProvider(user, form.getFieldValue("name")).then(() => {
-                // navigate(`/perfil/${user.uid}`)
-              })
-            })
-            .catch((err) => {
-              if (err.code === "auth/email-already-in-use")
-                errorNotification("El mail ya esta en uso")
-              else errorNotification("Hubo un problema al registrarse")
-            })
-            .finally(() => setLoading(false))
-          setLoading(false)
-        }
+          })
       })
       .catch((err) => {
         setLoading(false)
-        console.log("error")
         console.error(err)
       })
   }
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo)
+    console.error("Failed:", errorInfo)
   }
 
   return (
@@ -73,8 +68,8 @@ export const LoginPage = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        width: "100vw",
-        height: "100vh"
+        width: "100%",
+        height: "100%"
       }}
     >
       <div
@@ -103,20 +98,6 @@ export const LoginPage = () => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
-          {mode === "register" && (
-            <Form.Item
-              label="Nombre Completo"
-              name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "Por favor ingrese su nombre completo"
-                }
-              ]}
-            >
-              <Input />
-            </Form.Item>
-          )}
           <Form.Item
             label="Email"
             name="email"
@@ -140,19 +121,6 @@ export const LoginPage = () => {
           >
             <Input.Password />
           </Form.Item>
-
-          {mode === "register" && (
-            <Form.Item
-              label="Repita su Contraseña"
-              name="password2"
-              rules={[
-                { required: true, message: "Por favor ingrese su contraseña" }
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-          )}
-
           <Form.Item>
             <Button
               type="primary"
@@ -161,23 +129,8 @@ export const LoginPage = () => {
               loading={loading}
               style={{ marginTop: "1em", height: "3em", width: "100%" }}
             >
-              {mode === "login" ? "Iniciar Sesion" : "Registrarse"}
+              "Iniciar Sesion"
             </Button>
-            <br />
-            <br />
-            {mode === "login" && (
-              <>
-                <Text>No eres miembro? </Text>
-                <Link onClick={() => setMode("register")}>Registrese</Link>
-              </>
-            )}
-            {mode === "register" && (
-              <>
-                <Link onClick={() => setMode("login")}>
-                  Volver a Iniciar Sesion
-                </Link>
-              </>
-            )}
           </Form.Item>
         </Form>
       </div>

@@ -6,11 +6,11 @@ import {
   UserOutlined,
   MenuOutlined
 } from "@ant-design/icons"
-import { signOut, useAuth } from "../../firebase/auth"
-import { toAppointments } from "../../Appointments/routes"
-import { toPatients } from "../../Patients/routes"
+// import { toAppointments } from "../../Appointments/routes"
+// import { toPatients } from "../../Patients/routes"
 import useMediaQuery from "../../UI/useMediaQuery"
 import { useState } from "react"
+import { useAuth } from "../../Auth/useAuth"
 
 const { Header } = Layout
 
@@ -24,7 +24,7 @@ const HeaderDesktop = () => {
       key: "/pacientes",
       icon: <DesktopOutlined />,
       onClick: () => {
-        navigate(toPatients())
+        // navigate(toPatients())
       }
     },
     {
@@ -32,7 +32,7 @@ const HeaderDesktop = () => {
       key: "/turnos",
       icon: <PieChartOutlined />,
       onClick: () => {
-        navigate(toAppointments())
+        // navigate(toAppointments())
       }
     }
   ]
@@ -110,19 +110,19 @@ const HeaderMobile = () => {
 
 const UserDropdown = () => {
   const navigate = useNavigate()
-  const [user] = useAuth()
+  const { user, signout } = useAuth()
 
   const options = [
     {
       label: "Perfil",
       key: "profile",
-      onClick: () => navigate(`/perfil/${user?.uid}`),
+      onClick: () => navigate(`/perfil/${user?.id}`),
       icon: <></>
     },
     {
       label: "Cerrar Sesion",
       key: "signOut",
-      onClick: signOut,
+      onClick: signout,
       icon: <></>
     }
   ]
