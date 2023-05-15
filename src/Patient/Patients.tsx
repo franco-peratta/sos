@@ -30,7 +30,6 @@ export const Patients = () => {
   useEffect(() => {
     getPatients().then((res) => {
       setData(res.data)
-      console.log("patients", res.data)
       setLoading(false)
     })
   }, [])

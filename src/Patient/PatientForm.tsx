@@ -6,15 +6,22 @@ import { Bubble } from "../components/Bubble"
 import { addPatient } from "./Handler"
 import { toPatients } from "./routes"
 import { errorNotification, successNotification } from "../Notification"
+import type { Moment } from "moment"
 
 const { Title } = Typography
 
-type Props = {}
+type TForm = {
+  name: string
+  dni: string
+  email: string
+  phoneNumber: string
+  dob: Moment
+}
 
-export const PatientForm = (props: Props) => {
+export const PatientForm = (_props: {}) => {
   const [loading, setLoading] = useState(false)
 
-  const [form] = Form.useForm()
+  const [form] = Form.useForm<TForm>()
   const navigate = useNavigate()
 
   const submit = () => {
@@ -23,7 +30,12 @@ export const PatientForm = (props: Props) => {
     form
       .validateFields()
       .then(async () => {
-        await addPatient({ ...values, dob: values.dob.format("DD/MM/YYYY") })
+        console.log({ ...values, dob: values.dob.format("DD/MM/YYYY") })
+        await addPatient({
+          ...values,
+          dob: values.dob.format("DD/MM/YYYY"),
+          emr: ""
+        })
         setLoading(false)
         successNotification("Paciente agregado correctamente")
         navigate(toPatients())
@@ -82,10 +94,27 @@ export const PatientForm = (props: Props) => {
         >
           <Input allowClear size="large" placeholder="ejemplo@email.com" />
         </Form.Item>
+        <Form.Item
+          name="phoneNumber"
+          label="Numero de telefono"
+          rules={[
+            {
+              required: true,
+              message: "Por favor, ingrese su numero de telefono"
+            }
+          ]}
+        >
+          <Input
+            type="number"
+            allowClear
+            size="large"
+            placeholder="Numero de telefono"
+          />
+        </Form.Item>
         <Row>
           <Space size="large" direction="horizontal">
             <Form.Item
-              label="Fecha"
+              label="Fecha de nacimiento"
               name="dob"
               rules={[
                 {

@@ -1,7 +1,7 @@
 import { Space, Button } from "antd"
 import { useState } from "react"
 import { EmrType } from "./model"
-import { Patient } from "../Patients/model"
+import { Patient } from "../Patient/model"
 import { RichTextEditor } from "../UI/RichTextEditor"
 
 type EmrProps = {

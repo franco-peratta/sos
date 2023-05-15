@@ -129,7 +129,7 @@ export const LoginPage = () => {
               loading={loading}
               style={{ marginTop: "1em", height: "3em", width: "100%" }}
             >
-              "Iniciar Sesion"
+              Iniciar Sesion
             </Button>
           </Form.Item>
         </Form>
