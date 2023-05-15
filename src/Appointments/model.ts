@@ -1,3 +1,6 @@
+import { Patient } from "../Patient/model"
+import { Provider } from "../Profile/Model"
+
 export const Status = {
   espera: "espera",
   en_progreso: "en_progreso",
@@ -5,15 +8,15 @@ export const Status = {
   cancelado: "cancelado"
 } as const
 
-type TStatus = (typeof Status)[keyof typeof Status]
+export type AppointmentStatus = (typeof Status)[keyof typeof Status]
 
 export type Appointment = {
-  id: number
-  status: TStatus
-  date: Date
+  id: string
+  status: AppointmentStatus
+  date: string
   time: string
-  patientId: number
-  providerId: number
+  patient?: Patient
+  provider?: Provider
 }
 
 export const statusColorMapping = {

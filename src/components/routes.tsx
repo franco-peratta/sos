@@ -7,6 +7,7 @@ import { PatientDetails } from "../Patient/PatientDetails"
 import { PatientForm } from "../Patient/PatientForm"
 import { Profile } from "../Profile"
 import { Page } from "./Page"
+import { Appointments } from "../Appointments"
 
 export const routes = (
   <Routes>
@@ -60,8 +61,8 @@ export const routes = (
           </RequireAuth>
         }
       />
-      {/*<Route path="/turnos" element={<Appointments />} />
-    <Route path="/turnos/nuevo" element={<NewAppointment />} />
+      <Route path="/turnos" element={<Appointments />} />
+      {/*<Route path="/turnos/nuevo" element={<NewAppointment />} />
     <Route
       path="/videocall/:patientId/:appointmentId"
       element={<Videocall />}

@@ -127,9 +127,10 @@ const Details = ({ patient }: { patient: PatientWithAppointments }) => {
                 </Tag>
                 <br />
                 <br />
-                Dr/a: {`${app.providerId}`}
+                Dr/a: {`${app.provider?.name}`}
               </div>
             )
+            console.log(app)
 
             const actions = [
               <Popconfirm

@@ -1,0 +1,34 @@
+import { http } from "../http"
+import { Appointment, AppointmentStatus } from "./model"
+
+export const getAppointments = async () => {
+  return http<Appointment[]>("GET", "/appointment")
+}
+
+export const getAppointmentsByPatientId = async (id: string) => {
+  return http<Appointment[]>("GET", `/appointment/patient/${id}`)
+}
+
+export const getAppointmentsByProviderId = async (id: string) => {
+  return http<Appointment[]>("GET", `/appointment/provider/${id}`)
+}
+
+export const addAppointment = async (
+  patientId: string,
+  appointment: Appointment
+) => {
+  return true
+}
+
+// export const deleteAppointment = async (
+//   appointment: AppointmentWithPatientInfo
+// ) => {
+//   return true
+// }
+
+export const changeAppointmentStatusById = async (
+  appointmentId: string,
+  status: AppointmentStatus
+) => {
+  return true
+}
