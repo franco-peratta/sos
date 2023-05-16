@@ -8,6 +8,7 @@ import { PatientForm } from "../Patient/PatientForm"
 import { Profile } from "../Profile"
 import { Page } from "./Page"
 import { Appointments } from "../Appointments"
+import { NewAppointment } from "../Appointments/NewAppointment"
 
 export const routes = (
   <Routes>
@@ -62,8 +63,8 @@ export const routes = (
         }
       />
       <Route path="/turnos" element={<Appointments />} />
-      {/*<Route path="/turnos/nuevo" element={<NewAppointment />} />
-    <Route
+      <Route path="/turnos/nuevo" element={<NewAppointment />} />
+      {/* <Route
       path="/videocall/:patientId/:appointmentId"
       element={<Videocall />}
     /> */}

@@ -11,18 +11,16 @@ import {
   Popconfirm
 } from "antd"
 import { PlusOutlined, PhoneOutlined, DeleteOutlined } from "@ant-design/icons"
-// import { toCreateAppointment } from "./routes"
+import moment from "moment"
 import { Bubble } from "../components/Bubble"
 import {
   changeAppointmentStatusById,
-  getAppointments,
   getAppointmentsByProviderId
 } from "./Handler"
 import { Loader } from "../components/Loader"
-import { infoNotification, successNotification } from "../Notification"
+import { infoNotification } from "../Notification"
 import { Appointment, statusColorMapping } from "./model"
 import { useAuth } from "../Auth/useAuth"
-import moment from "moment"
 
 const { Title, Text } = Typography
 const { Meta } = Card
@@ -64,7 +62,7 @@ export const Appointments = () => {
       <div className="flex--space-between">
         <Title>Turnos</Title>
         <Button
-          // onClick={() => navigate(toCreateAppointment())}
+          onClick={() => navigate("/turnos/nuevo")}
           type="default"
           size="large"
         >

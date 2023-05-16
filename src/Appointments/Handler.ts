@@ -1,3 +1,4 @@
+import { Provider } from "../Profile/Model"
 import { http } from "../http"
 import { Appointment, AppointmentStatus } from "./model"
 
@@ -13,11 +14,14 @@ export const getAppointmentsByProviderId = async (id: string) => {
   return http<Appointment[]>("GET", `/appointment/provider/${id}`)
 }
 
-export const addAppointment = async (
-  patientId: string,
-  appointment: Appointment
-) => {
-  return true
+export const getProvidersList = async () => {
+  return http<Provider[]>("GET", `/provider`)
+}
+
+export const addAppointment = async (appointment: Omit<Appointment, "id">) => {
+  return http<Appointment>("POST", "/appointment/", {
+    params: appointment
+  })
 }
 
 // export const deleteAppointment = async (
