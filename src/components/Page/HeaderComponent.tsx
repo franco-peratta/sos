@@ -24,7 +24,7 @@ const HeaderDesktop = () => {
       key: "/pacientes",
       icon: <DesktopOutlined />,
       onClick: () => {
-        // navigate(toPatients())
+        navigate("/pacientes")
       }
     },
     {
@@ -32,7 +32,7 @@ const HeaderDesktop = () => {
       key: "/turnos",
       icon: <PieChartOutlined />,
       onClick: () => {
-        // navigate(toAppointments())
+        navigate("/turnos")
       }
     }
   ]

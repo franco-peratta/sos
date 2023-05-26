@@ -28,11 +28,9 @@ export const addAppointment = async (appointment: Omit<Appointment, "id">) => {
   })
 }
 
-// export const deleteAppointment = async (
-//   appointment: AppointmentWithPatientInfo
-// ) => {
-//   return true
-// }
+export const deleteAppointment = async (id: string) => {
+  return http<Appointment>("DELETE", `/appointment/${id}`)
+}
 
 export const changeAppointmentStatusById = async (
   appointmentId: string,
