@@ -107,9 +107,7 @@ export const Appointments = () => {
                     onConfirm={() => {
                       infoNotification("Creando llamada")
                       changeAppointmentStatusById(app.id, "en_progreso")
-                        .then(() =>
-                          navigate(`/videocall/${app.patient?.id}/${app.id}`)
-                        )
+                        .then(() => navigate(`/videocall/${app.id}`))
                         .catch(() => console.log("@TODO catchear el error"))
                     }}
                     okText="Si"

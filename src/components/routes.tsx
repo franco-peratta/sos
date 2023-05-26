@@ -9,6 +9,7 @@ import { Profile } from "../Profile"
 import { Page } from "./Page"
 import { Appointments } from "../Appointments"
 import { NewAppointment } from "../Appointments/NewAppointment"
+import { Videocall } from "../Videocall"
 
 export const routes = (
   <Routes>
@@ -64,10 +65,7 @@ export const routes = (
       />
       <Route path="/turnos" element={<Appointments />} />
       <Route path="/turnos/nuevo" element={<NewAppointment />} />
-      {/* <Route
-      path="/videocall/:patientId/:appointmentId"
-      element={<Videocall />}
-    /> */}
+      <Route path="/videocall/:appointmentId" element={<Videocall />} />
       <Route
         path="*"
         element={

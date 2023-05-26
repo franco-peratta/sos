@@ -6,6 +6,10 @@ export const getAppointments = async () => {
   return http<Appointment[]>("GET", "/appointment")
 }
 
+export const getAppointmentById = async (id: string) => {
+  return http<Appointment>("GET", `/appointment/${id}`)
+}
+
 export const getAppointmentsByPatientId = async (id: string) => {
   return http<Appointment[]>("GET", `/appointment/patient/${id}`)
 }
