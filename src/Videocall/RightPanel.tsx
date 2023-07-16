@@ -41,9 +41,7 @@ export const RightPanel = ({
   const onOk = (emr: EmrType) => {
     setVisible(false)
     const newPatientInfo = { ...patientInfo, emr }
-    console.log(newPatientInfo)
     updateEMR(patientInfo.id, emr).then((res) => {
-      console.log("asd", res)
       setPatientInfo(newPatientInfo)
     })
   }
@@ -51,8 +49,6 @@ export const RightPanel = ({
   const onCancel = () => {
     setVisible(false)
   }
-
-  console.log(patientInfo)
 
   return (
     <>

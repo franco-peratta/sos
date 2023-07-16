@@ -141,7 +141,7 @@ export const Appointments = () => {
                     </Tag>
                   </div>
                   <Tag style={{ fontSize: "1.2em" }} color="blue">
-                    {moment(app.date).format("DD/MM/YYYY HH:mm")}
+                    {`${moment(app.date).format("DD/MM/YYYY")} ${app.time}`}
                   </Tag>
                   <Tag
                     style={{ fontSize: "1em" }}

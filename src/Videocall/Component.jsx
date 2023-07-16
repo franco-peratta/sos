@@ -39,13 +39,10 @@ export const Videocall = () => {
   if (loading) return <Loader />
   if (error) return <span>Error page goes here | {error}</span>
 
-  const handleMeetingEnd = () => {
+  const handleMeetingEnd = async () => {
     infoNotification("Videollamada finaliza")
-    changeAppointmentStatusById(
-      appointment.patient.id,
-      appointment.patient.appointment.id,
-      "terminado"
-    )
+    console.log("Videollamada finaliza", appointment)
+    await changeAppointmentStatusById(appointment.id, "terminado")
     navigate("/")
   }
 

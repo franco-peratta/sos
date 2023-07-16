@@ -29,8 +29,6 @@ type Props = {
   setShifts: Function
 }
 export const HoursOfOperations = ({ user, setShifts }: Props) => {
-  console.log(user.shifts)
-
   const onChange = (value: any, day: Day, index: number) => {
     const a: Moment = value[0]
     const b: Moment = value[1]

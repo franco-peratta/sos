@@ -63,9 +63,30 @@ export const routes = (
           </RequireAuth>
         }
       />
-      <Route path="/turnos" element={<Appointments />} />
-      <Route path="/turnos/nuevo" element={<NewAppointment />} />
-      <Route path="/videocall/:appointmentId" element={<Videocall />} />
+      <Route
+        path="/turnos"
+        element={
+          <RequireAuth>
+            <Appointments />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/turnos/nuevo"
+        element={
+          <RequireAuth>
+            <NewAppointment />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/videocall/:appointmentId"
+        element={
+          <RequireAuth>
+            <Videocall />
+          </RequireAuth>
+        }
+      />
       <Route
         path="*"
         element={

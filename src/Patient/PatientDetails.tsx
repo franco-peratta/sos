@@ -173,7 +173,7 @@ const Details = ({
             return (
               <Card key={`${app.id}`} style={{ width: 300 }} actions={actions}>
                 <Meta
-                  title={`${app.date} ${app.time}`}
+                  title={`${app.date.split("T")[0]} ${app.time}`}
                   description={<Description />}
                 />
               </Card>

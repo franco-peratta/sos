@@ -30,7 +30,6 @@ export const PatientForm = (_props: {}) => {
     form
       .validateFields()
       .then(async () => {
-        console.log({ ...values, dob: values.dob.format("DD/MM/YYYY") })
         await addPatient({
           ...values,
           dob: values.dob.format("DD/MM/YYYY"),

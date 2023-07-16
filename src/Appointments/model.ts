@@ -15,6 +15,7 @@ export type Appointment = {
   status: AppointmentStatus
   date: string
   time: string
+  duration: number
   patient?: Patient
   provider?: Provider
 }

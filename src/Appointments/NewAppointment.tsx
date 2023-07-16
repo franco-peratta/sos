@@ -10,16 +10,18 @@ import {
   Space,
   Button,
   Select,
-  Steps
+  Steps,
+  InputNumber
 } from "antd"
 import { CloseOutlined } from "@ant-design/icons"
 import { Bubble } from "../components/Bubble"
 import { Patient } from "../Patient/model"
 import { getPatients } from "../Patient/Handler"
-import { addAppointment, getProvidersList } from "./Handler"
+import { addAppointment, getOccupiedSlots, getProvidersList } from "./Handler"
 import { Provider } from "../Profile/Model"
 import { errorNotification, successNotification } from "../Notification"
 import { Status } from "./model"
+import { useAuth } from "../Auth/useAuth"
 
 const { Option } = Select
 const { Title, Text } = Typography
@@ -30,6 +32,8 @@ const steps = ["Elegir paciente", "Elegir fecha", "Validar datos"]
 export const NewAppointment = () => {
   const navigate = useNavigate()
 
+  const { user } = useAuth()
+
   const [idForm] = Form.useForm()
   const [detailsForm] = Form.useForm()
 
@@ -37,6 +41,7 @@ export const NewAppointment = () => {
   const [medics, setMedics] = useState<Provider[]>()
   const [patients, setPatients] = useState<Patient[]>()
   const [isLoading, setIsLoading] = useState(true)
+  const [disabledTime, setDisabledTime] = useState<any>()
 
   useEffect(() => {
     Promise.all([getPatients(), getProvidersList()])
@@ -50,9 +55,6 @@ export const NewAppointment = () => {
       })
   }, [])
 
-  console.log(patients)
-  console.log(medics)
-
   const next = useCallback(() => {
     if (current === 0) {
       idForm
@@ -64,7 +66,10 @@ export const NewAppointment = () => {
       detailsForm
         .validateFields()
         .then(() => setCurrent((current) => current + 1))
-        .catch(() => {})
+        .catch((e) => {
+          console.error(e)
+          console.log(detailsForm.getFieldsValue())
+        })
     }
   }, [idForm, detailsForm, current])
 
@@ -72,37 +77,9 @@ export const NewAppointment = () => {
     setCurrent((prev) => prev - 1)
   }
 
-  const submit = async () => {
-    setIsLoading(true)
-    const patientId = idForm.getFieldsValue().patient
-    const { medic: providerId, date, time } = detailsForm.getFieldsValue()
-    const appointment = {
-      status: Status.espera,
-      date,
-      time,
-      providerId,
-      patientId
-    }
-
-    console.log(providerId, date, time)
-    console.log(appointment)
-
-    try {
-      const data = await addAppointment(appointment)
-      console.log({ data })
-      successNotification("Turno creado correctamente")
-      navigate("/turnos")
-    } catch (e) {
-      errorNotification("Error al crear el turno")
-      console.error(e)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   const getNewAppointmentSummary = () => {
     const patientId = idForm.getFieldsValue().patient
-    const providerId = detailsForm.getFieldsValue().medic
+    const providerId = detailsForm.getFieldsValue().medic || user.id
 
     const patient = patients?.find((p) => p.id === patientId)
     const provider = medics?.find((p) => p.id === providerId)
@@ -121,12 +98,12 @@ export const NewAppointment = () => {
           }}
         >
           <div style={{ minWidth: "300px" }}>
-            <Title level={4}>Paciente</Title>
-            <Text>{patient.name}</Text>
-          </div>
-          <div style={{ minWidth: "300px" }}>
             <Title level={4}>Especialista</Title>
             <Text>{provider.name}</Text>
+          </div>
+          <div style={{ minWidth: "300px" }}>
+            <Title level={4}>Paciente</Title>
+            <Text>{patient.name}</Text>
           </div>
           <div style={{ minWidth: "300px" }}>
             <Title level={4}>Fecha</Title>
@@ -141,16 +118,132 @@ export const NewAppointment = () => {
         </div>
       )
     }
+    return <>Aca paso algo che</>
   }
 
   const disabledDates = (current: Moment) => {
-    // Cannot select days before today
-    return current && current < moment().startOf("day")
+    const disablePreviousDates = current && current < moment().startOf("day")
+
+    const id = detailsForm.getFieldValue("medic") || user.id
+    const selectedMedic = medics?.find((m) => m.id === id)
+
+    if (!selectedMedic) return disablePreviousDates
+
+    const daysOff = []
+    !selectedMedic.shifts.monday.available && daysOff.push(1)
+    !selectedMedic.shifts.tuesday.available && daysOff.push(2)
+    !selectedMedic.shifts.wednesday.available && daysOff.push(3)
+    !selectedMedic.shifts.thursday.available && daysOff.push(4)
+    !selectedMedic.shifts.friday.available && daysOff.push(5)
+    !selectedMedic.shifts.saturday.available && daysOff.push(6)
+    !selectedMedic.shifts.sunday.available && daysOff.push(0)
+
+    const disableDaysOff = daysOff.includes(current.day())
+
+    return disablePreviousDates || disableDaysOff
+  }
+
+  const getAvailableHours = async (date: Moment | null) => {
+    if (!date) {
+      setDisabledTime(undefined)
+      return
+    }
+
+    const id = detailsForm.getFieldValue("medic") || user.id
+    const selectedMedic = medics?.find((m) => m.id === id)
+
+    if (!selectedMedic) return
+
+    const day = date
+      .format("dddd")
+      .toLowerCase() as keyof typeof selectedMedic.shifts
+
+    const availableHours: number[] = []
+    for (const interval of selectedMedic.shifts[day].shifts) {
+      for (let i = interval.from; i < interval.to; i++) {
+        availableHours.push(i)
+      }
+    }
+
+    const unavailableHours: number[] = []
+
+    for (let i = 0; i < 24; i++) {
+      if (!availableHours.includes(i)) {
+        unavailableHours.push(i)
+      }
+    }
+
+    const { data: occupiedSlots } = await getOccupiedSlots(user.id, date)
+
+    const hours = new Set()
+    for (const slot of occupiedSlots) {
+      const hour = slot.split(":")[0]
+      hours.add(hour)
+    }
+
+    setDisabledTime(() => {
+      return () => {
+        return {
+          disabledHours: () => {
+            return unavailableHours
+          },
+          disabledMinutes: (hour: number) => {
+            if (hours.has(hour.toString())) {
+              const minutes = new Set()
+              for (const slot of occupiedSlots) {
+                const [hour, minute] = slot.split(":")
+                if (hour === hour.toString()) {
+                  minutes.add(Number(minute))
+                }
+              }
+              return Array.from(minutes)
+            }
+            return []
+          }
+        }
+      }
+    })
   }
 
   const onMedicChange = (value: string) => {
-    detailsForm.setFieldsValue({ medic: value })
-    detailsForm.setFieldsValue({ date: moment() })
+    detailsForm.setFieldsValue({ medic: value, date: undefined })
+  }
+
+  const submit = async () => {
+    setIsLoading(true)
+    const patientId = idForm.getFieldsValue().patient
+    const {
+      medic: providerId,
+      date,
+      time,
+      duration
+    } = detailsForm.getFieldsValue()
+    const appointment = {
+      status: Status.espera,
+      date,
+      time,
+      duration,
+      providerId,
+      patientId
+    }
+
+    try {
+      const appDto = {
+        ...appointment,
+        providerId: appointment.providerId || user.id,
+        date: appointment.date.format("YYYY-MM-DD"),
+        time: appointment.time.format("HH:mm")
+      }
+      const data = await addAppointment(appDto)
+      console.log({ data })
+      successNotification("Turno creado correctamente")
+      navigate("/turnos")
+    } catch (e) {
+      errorNotification("Error al crear el turno")
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -228,8 +321,7 @@ export const NewAppointment = () => {
               label="Especialista"
               rules={[
                 {
-                  required: true,
-                  message: "Por favor, elija un especialista"
+                  required: false
                 }
               ]}
             >
@@ -237,6 +329,8 @@ export const NewAppointment = () => {
                 showSearch
                 size="large"
                 style={{ width: 200 }}
+                defaultValue={user?.id}
+                disabled={!!user}
                 placeholder="Especialista"
                 optionFilterProp="children"
                 filterOption={(input, option) => {
@@ -287,6 +381,7 @@ export const NewAppointment = () => {
                     size="large"
                     format="DD/MM/YYYY"
                     disabledDate={disabledDates}
+                    onChange={getAvailableHours}
                   />
                 </Form.Item>
                 <Form.Item
@@ -304,6 +399,8 @@ export const NewAppointment = () => {
                     allowClear
                     format="HH:mm"
                     minuteStep={5}
+                    disabled={disabledTime === undefined}
+                    disabledTime={disabledTime}
                     onChange={(newTime) => {
                       newTime &&
                         detailsForm.setFieldsValue({
@@ -311,6 +408,17 @@ export const NewAppointment = () => {
                         })
                     }}
                   />
+                </Form.Item>
+                <Form.Item
+                  label="Duracion (WIP)"
+                  name="duration"
+                  rules={[
+                    {
+                      required: false
+                    }
+                  ]}
+                >
+                  <InputNumber disabled defaultValue={30} />
                 </Form.Item>
               </Space>
             </Row>
