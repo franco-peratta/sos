@@ -15,6 +15,7 @@ import moment from "moment"
 import { Bubble } from "../components/Bubble"
 import {
   changeAppointmentStatusById,
+  deleteAppointment,
   getAppointmentsByProviderId
 } from "./Handler"
 import { Loader } from "../components/Loader"
@@ -39,19 +40,17 @@ export const Appointments = () => {
   }, [user])
 
   const deleteHandler = async (appointment: Appointment) => {
-    // if (appointments) {
-    //   deleteAppointment(appointment)
-    //     .then(() => {
-    //       setAppointments(
-    //         appointments.filter((app) => app.id !== appointment.id)
-    //       )
-    //       successNotification("Turno borrado con exito")
-    //     })
-    //     .catch((e) => {
-    //       successNotification("Error al borrar el turno")
-    //       console.error(e)
-    //     })
-    // }
+    if (!appointment) return
+
+    console.log("appointment", appointment)
+    try {
+      await deleteAppointment(appointment.id)
+      setAppointments((prev) =>
+        prev?.filter((app) => app.id !== appointment.id)
+      )
+    } catch (e) {
+      console.error("Error: ", e)
+    }
   }
 
   if (loading) return <Loader />

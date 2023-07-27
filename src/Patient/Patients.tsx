@@ -57,26 +57,8 @@ export const Patients = () => {
       },
       {
         key: "email",
-        title: "email",
+        title: "Email",
         dataIndex: "email"
-      },
-      {
-        key: "edit",
-        title: "",
-        dataIndex: "edit",
-        render: (_: any, record: Patient) => {
-          return (
-            <div className="icon--hovered">
-              <EditOutlined
-                style={{ fontSize: "1.5em" }}
-                onClick={() => {
-                  console.log(record)
-                  alert("te lleva a la pantalla de editar pacientes (WIP)")
-                }}
-              />
-            </div>
-          )
-        }
       }
     ]
     setColumns(columnsSchema)

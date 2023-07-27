@@ -12,17 +12,25 @@ import { Patient } from "../Patient/model"
 
 const { Title, Text, Link } = Typography
 
-const getAge = (dob: string) => {
-  const splittedDate = dob.split("-")
-  const birthday = new Date(
-    +splittedDate[0],
-    +splittedDate[1] - 1,
-    +splittedDate[2]
-  )
+const getAge = (dateString: string): number => {
+  const today: Date = new Date()
+  const [day, month, year] = dateString.split("/").map(Number)
 
-  const ageDifMs = Date.now() - birthday.getTime()
-  const ageDate = new Date(ageDifMs)
-  return Math.abs(ageDate.getUTCFullYear() - 1970)
+  // Note: In JavaScript, months are zero-indexed, so we subtract 1 from the month value.
+  const birthDate: Date = new Date(year, month - 1, day)
+
+  let age: number = today.getFullYear() - birthDate.getFullYear()
+  const birthMonth: number = birthDate.getMonth()
+  const currentMonth: number = today.getMonth()
+
+  if (
+    currentMonth < birthMonth ||
+    (currentMonth === birthMonth && today.getDate() < birthDate.getDate())
+  ) {
+    age--
+  }
+
+  return age
 }
 
 type Props = {
