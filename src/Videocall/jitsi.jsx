@@ -69,6 +69,7 @@ const useJitsi = ({
   password,
   displayName,
   onMeetingEnd,
+  onParticipantLeft,
   ...options
 }) => {
   const [loading, setLoading] = useState(true)
@@ -116,6 +117,7 @@ const useJitsi = ({
     })
 
     client.addEventListener("readyToClose", onMeetingEnd)
+    client.addEventListener("participantLeft", onParticipantLeft)
 
     return () => jitsi && jitsi.dispose()
   }, [window.JitsiMeetExternalAPI])
@@ -131,6 +133,7 @@ useJitsi.propTypes = {
     password: PropTypes.string,
     displayName: PropTypes.string,
     onMeetingEnd: PropTypes.func,
+    onParticipantLeft: PropTypes.func,
     width: PropTypes.string,
     height: PropTypes.string,
     parentNode: PropTypes.string,

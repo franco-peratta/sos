@@ -87,7 +87,7 @@ export const HoursOfOperations = ({ user, setShifts }: Props) => {
                   </div>
                 ))}
                 {user.shifts[day.key].shifts.length === 0 && (
-                  <div>Dia de descanso</div>
+                  <div>Sin horarios</div>
                 )}
               </Space>
             </Col>

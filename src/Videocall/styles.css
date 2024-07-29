@@ -29,11 +29,14 @@
 .details {
   padding: 1em;
   margin-top: 3em;
+  display: flex;
+  flex-direction: column;
 }
 
 .details .title {
   margin: 0;
 }
+
 .details .dob {
   margin-top: 5em;
 }

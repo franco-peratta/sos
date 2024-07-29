@@ -1,10 +1,11 @@
+import { useState } from "react"
 import {
   LeftOutlined,
   RightOutlined,
   FileTextOutlined
 } from "@ant-design/icons"
 import { Space, Typography, Divider, Button, Modal } from "antd"
-import { useState } from "react"
+import moment from 'moment';
 import { updateEMR } from "../EMR/Handler"
 import { EmrType } from "../EMR/model"
 import { RichTextEditor } from "../UI/RichTextEditor"
@@ -12,25 +13,28 @@ import { Patient } from "../Patient/model"
 
 const { Title, Text, Link } = Typography
 
-const getAge = (dateString: string): number => {
-  const today: Date = new Date()
-  const [day, month, year] = dateString.split("/").map(Number)
+function calculateAge(dob: string): number {
+  // Try to parse the date using moment
+  const parsedDate = moment(dob, moment.ISO_8601, true);
 
-  // Note: In JavaScript, months are zero-indexed, so we subtract 1 from the month value.
-  const birthDate: Date = new Date(year, month - 1, day)
-
-  let age: number = today.getFullYear() - birthDate.getFullYear()
-  const birthMonth: number = birthDate.getMonth()
-  const currentMonth: number = today.getMonth()
-
-  if (
-    currentMonth < birthMonth ||
-    (currentMonth === birthMonth && today.getDate() < birthDate.getDate())
-  ) {
-    age--
+  // If the parsing was unsuccessful, try common date formats
+  if (!parsedDate.isValid()) {
+    const commonFormats = [
+      'MM-DD-YYYY', 'MM/DD/YYYY', 'DD-MM-YYYY', 'DD/MM/YYYY',
+      'YYYY-MM-DD', 'YYYY/MM/DD', 'DD MMM YYYY', 'MMM DD, YYYY'
+    ];
+    for (const format of commonFormats) {
+      const date = moment(dob, format, true);
+      if (date.isValid()) {
+        return moment().diff(date, 'years');
+      }
+    }
+    // If none of the formats worked, return -1 to indicate an invalid date
+    return -1;
   }
 
-  return age
+  // Calculate the age
+  return moment().diff(parsedDate, 'years');
 }
 
 type Props = {
@@ -80,25 +84,32 @@ export const RightPanel = ({
         )}
         {!collapsed && (
           <div className="details">
-            <Space direction="vertical">
-              <Title className="title">{patientInfo.name}</Title>
-              <Text type="secondary">{patientInfo.email}</Text>
-              <Text className="dob">
-                Fecha de nacimiento: {patientInfo.dob} -{" "}
-                {getAge(patientInfo.dob)} años
-              </Text>
-            </Space>
-            <Divider />
+            <div className="">
+              <Space direction="vertical">
+                <Title className="title">{patientInfo.name}</Title>
+                <Text type="secondary">{patientInfo.email}</Text>
+                <Text className="dob">
+                  Fecha de nacimiento: {patientInfo.dob} -{" "}
+                  {calculateAge(patientInfo.dob)} años
+                </Text>
+              </Space>
+              <Divider />
+              <div>
+                <Button
+                  type="link"
+                  size="large"
+                  onClick={() => {
+                    setVisible(true)
+                  }}
+                >
+                  <Link strong>Historia Clinica</Link>
+                  <FileTextOutlined style={{ marginLeft: ".5em" }} />
+                </Button>
+              </div>
+            </div>
             <div>
-              <Button
-                type="link"
-                size="large"
-                onClick={() => {
-                  setVisible(true)
-                }}
-              >
-                <Link strong>Historia Clinica</Link>
-                <FileTextOutlined style={{ marginLeft: ".5em" }} />
+              <Button type="primary" danger>
+                END CALL
               </Button>
             </div>
           </div>

@@ -40,10 +40,16 @@ export const Videocall = () => {
   if (error) return <span>Error page goes here | {error}</span>
 
   const handleMeetingEnd = async () => {
+    alert("ENTREEEEE")
     infoNotification("Videollamada finaliza")
     console.log("Videollamada finaliza", appointment)
     await changeAppointmentStatusById(appointment.id, "terminado")
     navigate("/")
+  }
+
+  const handleParticipantLeft = async (res) => {
+    console.log("PARTICIPANT LEFT")
+    console.log(res)
   }
 
   const setPatientInfo = (patientInfo) => {
@@ -77,6 +83,7 @@ export const Videocall = () => {
         displayName={displayName}
         password={password}
         onMeetingEnd={handleMeetingEnd}
+        onParticipantLeft={handleParticipantLeft}
         loadingComponent={<p>loading ...</p>}
         errorComponent={<p>Oops, something went wrong...</p>}
       />
